@@ -1,0 +1,55 @@
+this is a collection of IETF Internet Drafts for FTP HASH, RANGe, and LOCK. IDs are RFCs in progress.
+
+some of these were the product of the FTPEXT2 Working Group at the IETF.
+
+various authors: Ant Bryan [ http://www.metalinker.org/ ]
+                 Tim Kosse [ http://filezilla-project.org/ ]
+                 Daniel Stenberg [ http://www.haxx.se/ ]
+                 Tatsuhiro Tsujikawa [ http://aria2.sourceforge.net/ ]
+				 
+
+FTP HASH Command for Cryptographic Hashes
+http://tools.ietf.org/html/draft-bryan-ftpext-hash
+Authors: A. Bryan, T. Kosse, D. Stenberg
+
+Abstract
+
+   The File Transfer Protocol does not offer any method to verify the
+   integrity of a transferred file, nor can two files be compared
+   against each other without actually transferring them first.
+   Cryptographic hashes are a possible solution to this problem.  In the
+   past, several attempts have been made to add commands to obtain
+   checksums and hashes, however none have been formally specified,
+   leading to non-interoperability and confusion.  To solve these
+   issues, this document specifies a new FTP command to be used by
+   clients to request cryptographic hashes of files.
+
+---
+FTP RANG Command for Octet Ranges
+http://tools.ietf.org/html/draft-bryan-ftp-range
+Authors: A. Bryan, T. Tsujikawa, D. Stenberg
+
+Abstract
+
+   The File Transfer Protocol offers the REST command to designate a
+   starting point for a transfer, but does not currently offer any
+   method to specify an end point.  This document specifies a new FTP
+   RANG command to be used by clients to designate a start and end point
+   to permit restarts and repairs of interrupted data transfers in
+   STREAM mode.
+
+---
+FTP LOCK Command for Using a Single Port
+http://tools.ietf.org/html/draft-bryan-ftp-lock
+Authors: A. Bryan, D. Stenberg, T. Tsujikawa
+
+
+Abstract
+
+   One of the biggest hurdles for FTP in real life usage is its use of
+   two connections.  First, it uses a primary connection to send control
+   commands on, and when it sends or receives data, it opens a second
+   TCP stream for that purpose.  This document specifies a new FTP LOCK
+   command to be used by clients to request the server to use the
+   control connection for data transfers, using a single port instead of
+   two.
