@@ -4,7 +4,7 @@
 Network Working Group                                           A. Bryan
 Internet-Draft                                              T. Tsujikawa
 Intended status: Standards Track                             D. Stenberg
-Expires: November 26, 2012                                  May 25, 2012
+Expires: December 30, 2012                                 June 28, 2012
 
 
           File Transfer Protocol RANG Command for Octet Ranges
@@ -43,7 +43,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 26, 2012.
+   This Internet-Draft will expire on December 30, 2012.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 1]
+Bryan, et al.           Expires December 30, 2012               [Page 1]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -108,9 +108,9 @@ Table of Contents
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 2]
+Bryan, et al.           Expires December 30, 2012               [Page 2]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 3]
+Bryan, et al.           Expires December 30, 2012               [Page 3]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
 2.1.  Basic Tokens
@@ -220,9 +220,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 4]
+Bryan, et al.           Expires December 30, 2012               [Page 4]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    end the data transfer.
@@ -276,9 +276,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 5]
+Bryan, et al.           Expires December 30, 2012               [Page 5]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    When using TYPE ASCII or IMAGE, the SIZE command will return the
@@ -332,9 +332,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 6]
+Bryan, et al.           Expires December 30, 2012               [Page 6]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
       range-response = range-ok / error-response
@@ -388,9 +388,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 7]
+Bryan, et al.           Expires December 30, 2012               [Page 7]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    The server-PI SHOULD transfer 0 octets with RETR if the specified
@@ -398,8 +398,8 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
    file size.
 
    The server-PI SHOULD transfer the whole range from the start point to
-   the end point with RETR if the end point is larger than the actual
-   file.
+   the end of the file with RETR if the end point is larger than the
+   actual file.
 
 4.1.  FEAT Command Response for RANG Command
 
@@ -444,9 +444,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 8]
+Bryan, et al.           Expires December 30, 2012               [Page 8]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    interrupted after 802816 octets had been received, that the transfer
@@ -500,9 +500,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012               [Page 9]
+Bryan, et al.           Expires December 30, 2012               [Page 9]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    Description: End point octet range (for STREAM mode).
@@ -556,9 +556,9 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012              [Page 10]
+Bryan, et al.           Expires December 30, 2012              [Page 10]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
               progress).
@@ -566,7 +566,7 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 Appendix A.  Acknowledgements and Contributors
 
-   Thanks to the FTPEXT2 Working Group and Kamil Dudka.
+   Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Tim Kosse.
 
    Portions of [RFC3659] were wholly reused in this document.
 
@@ -612,9 +612,9 @@ Authors' Addresses
 
 
 
-Bryan, et al.           Expires November 26, 2012              [Page 11]
+Bryan, et al.           Expires December 30, 2012              [Page 11]
 
-Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
+Internet-Draft      FTP RANG Command for Octet Ranges          June 2012
 
 
    Tatsuhiro Tsujikawa
@@ -668,5 +668,5 @@ Internet-Draft      FTP RANG Command for Octet Ranges           May 2012
 
 
 
-Bryan, et al.           Expires November 26, 2012              [Page 12]
+Bryan, et al.           Expires December 30, 2012              [Page 12]
 

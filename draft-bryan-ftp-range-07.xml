@@ -318,7 +318,7 @@ error indicating the invalid restart attempt.</t>
 <t>The server-PI SHOULD transfer 0 octets with RETR if the specified start
 point or start point and end point are larger than the actual file size.</t>
 
-<t>The server-PI SHOULD transfer the whole range from the start point to the end point with RETR if the end point is larger than the actual file.</t>
+<t>The server-PI SHOULD transfer the whole range from the start point to the end of the file with RETR if the end point is larger than the actual file.</t>
 
 <section title="FEAT Command Response for RANG Command">
 
@@ -698,7 +698,7 @@ define how they operate with RANG. The HASH command <xref target="draft-bryan-ft
 	    </references> 
 
 	    <section title="Acknowledgements and Contributors">
-		  <t>Thanks to the FTPEXT2 Working Group and Kamil Dudka.</t>
+		  <t>Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Tim Kosse.</t>
 		  <t>Portions of <xref target="RFC3659"/> were wholly reused in this document.</t>
     </section>
 
