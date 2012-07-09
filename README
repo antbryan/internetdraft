@@ -1,4 +1,5 @@
-this is a collection of IETF Internet Drafts for FTP HASH, RANGe, and LOCK. IDs are RFCs in progress.
+this is a collection of IETF Internet Drafts for Metalink/XML clients/publishers/caches, FTP HASH, RANGe, and LOCK.
+(IDs are RFCs in progress.)
 
 some of these were the product of the FTPEXT2 Working Group at the IETF.
 
@@ -6,8 +7,26 @@ various authors: Ant Bryan [ http://www.metalinker.org/ ]
                  Tim Kosse [ http://filezilla-project.org/ ]
                  Daniel Stenberg [ http://www.haxx.se/ ]
                  Tatsuhiro Tsujikawa [ http://aria2.sourceforge.net/ ]
+				 Neil McNab [ http://www.nabber.org/ ]
+				 Peter Poeml [ http://mirrorbrain.org/~poeml/ ]
 				 
 
+Metalink/XML Clients, Publishers, and Caches
+http://tools.ietf.org/html/draft-bryan-metalink-client
+Authors:  A. Bryan, T. Tsujikawa, N. McNab, P. Poeml
+
+Abstract
+
+   This document specifies behavior for Metalink/XML clients,
+   publishers, and proxy caches. way to get information that is usually
+   contained in the Metalink XML-based download description format.
+   Metalink XML files contain multiple download locations (mirrors and
+   Peer-to-Peer), cryptographic hashes, digital signatures, and other
+   information.  Metalink clients can use this information to make file
+   transfers more robust and reliable.  Normative requirements for
+   Metalink/XML clients, publishers, and proxy caches are described
+   here.
+   
 FTP HASH Command for Cryptographic Hashes
 http://tools.ietf.org/html/draft-bryan-ftpext-hash
 Authors: A. Bryan, T. Kosse, D. Stenberg
