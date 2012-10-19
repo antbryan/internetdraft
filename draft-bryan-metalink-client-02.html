@@ -144,16 +144,16 @@
 <tr><td class="header">Network Working Group</td><td class="header">A. Bryan</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">T. Tsujikawa</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">N. McNab</td></tr>
-<tr><td class="header">Expires: January 17, 2013</td><td class="header">&nbsp;</td></tr>
+<tr><td class="header">Expires: April 21, 2013</td><td class="header">&nbsp;</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">P. Poeml</td></tr>
 <tr><td class="header">&nbsp;</td><td class="header">MirrorBrain</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">July 16, 2012</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">October 18, 2012</td></tr>
 </table></td></tr></table>
-<h1><br />Metalink/XML Clients, Publishers, and Caches<br />draft-bryan-metalink-client-01</h1>
+<h1><br />Metalink/XML Clients, Publishers, and Caches<br />draft-bryan-metalink-client-02</h1>
 
 <h3>Abstract</h3>
 
-<p>This document specifies behavior for Metalink/XML clients, publishers, and proxy caches. way to get information that is usually contained in the Metalink XML-based download description format. 
+<p>This document specifies behavior for Metalink/XML clients, publishers, and proxy caches.
     Metalink XML files contain multiple download locations (mirrors and Peer-to-Peer), cryptographic hashes, digital signatures, and other information. Metalink clients can use this information to make file transfers more robust and reliable.
 	Normative requirements for Metalink/XML clients, publishers, and proxy caches are described here.
 </p>
@@ -184,7 +184,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on January 17, 2013.</p>
+This Internet-Draft will expire on April 21, 2013.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -331,6 +331,8 @@ Notational Conventions</h3>
 <a name="rfc.section.1.2"></a><h3>1.2.&nbsp;
 Terminology</h3>
 
+<p>In this context, "Metalink" refers to "Metalink/XML" refers to the XML format described in <a class='info' href='#RFC5854'>[RFC5854]<span> (</span><span class='info'>Bryan, A., Tsujikawa, T., McNab, N., and P. Poeml, &ldquo;The Metalink Download Description Format,&rdquo; June&nbsp;2010.</span><span>)</span></a>.
+</p>
 <p>The following terms as used in this document are defined here:
 	    </p>
 <ul class="text">
@@ -340,9 +342,11 @@ Terminology</h3>
 </li>
 <li>Mirror server : Typically FTP or HTTP servers that "mirror" the Metalink server, as in they provide identical copies of (at least some) files that are also on the mirrored server.
 </li>
-<li>Metalink/XML : An XML file that can contain similar information to a HTTP response header Metalink, such as mirrors and cryptographic hashes.
+<li>Metalink/XML : An XML file which describes a file that can contain information such as mirrors, cryptographic hashes, digital signatures, and more.
 </li>
 <li>Metalink Processors or Clients : Applications that process Metalink/XML and use them provide an improved download experience. They support HTTP and could also support other download protocols like FTP or various Peer-to-Peer methods.
+</li>
+<li>Metalink/HTTP : An HTTP header that contains information such as mirrors, cryptographic hashes, and digital signatures, which could also be in a Metalink/XML file.
 </li>
 </ul>
 
@@ -351,11 +355,11 @@ Terminology</h3>
 <a name="rfc.section.2"></a><h3>2.&nbsp;
 Metalink/XML Clients</h3>
 
-<p>In this context, "Metalink" refers to "Metalink/XML" refers to the XML format described in <a class='info' href='#RFC5854'>[RFC5854]<span> (</span><span class='info'>Bryan, A., Tsujikawa, T., McNab, N., and P. Poeml, &ldquo;The Metalink Download Description Format,&rdquo; June&nbsp;2010.</span><span>)</span></a>.
+<p>Metalink/XML clients use the mirrors provided by a Metalink/XML file. Metalink clients SHOULD support HTTP <a class='info' href='#RFC2616'>[RFC2616]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> and SHOULD support FTP <a class='info' href='#RFC0959'>[RFC0959]<span> (</span><span class='info'>Postel, J. and J. Reynolds, &ldquo;File Transfer Protocol,&rdquo; October&nbsp;1985.</span><span>)</span></a>. Metalink clients MAY support BitTorrent <a class='info' href='#BITTORRENT'>[BITTORRENT]<span> (</span><span class='info'>Cohen, B., &ldquo;The BitTorrent Protocol Specification,&rdquo; February&nbsp;2008.</span><span>)</span></a>, 
+      or other download methods. Metalink clients SHOULD switch downloads from one mirror to another if a file is not available or if a mirror becomes unreachable. Metalink clients MAY support multi-source, or parallel, 
+      downloads, where portions of a file can be downloaded from multiple mirrors simultaneously (and optionally, from Peer-to-Peer sources). Metalink clients SHOULD support error recovery by using the cryptographic hashes of parts of the file listed in Metalink/XML files, as described in <a class='info' href='#RFC5854'>[RFC5854]<span> (</span><span class='info'>Bryan, A., Tsujikawa, T., McNab, N., and P. Poeml, &ldquo;The Metalink Download Description Format,&rdquo; June&nbsp;2010.</span><span>)</span></a>, Section 4.1.3.
 </p>
-<p>Metalink clients use the mirrors provided by a Metalink/XML file. Metalink clients SHOULD support HTTP <a class='info' href='#RFC2616'>[RFC2616]<span> (</span><span class='info'>Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, &ldquo;Hypertext Transfer Protocol -- HTTP/1.1,&rdquo; June&nbsp;1999.</span><span>)</span></a> and SHOULD support FTP <a class='info' href='#RFC0959'>[RFC0959]<span> (</span><span class='info'>Postel, J. and J. Reynolds, &ldquo;File Transfer Protocol,&rdquo; October&nbsp;1985.</span><span>)</span></a>. Metalink clients MAY support BitTorrent <a class='info' href='#BITTORRENT'>[BITTORRENT]<span> (</span><span class='info'>Cohen, B., &ldquo;The BitTorrent Protocol Specification,&rdquo; February&nbsp;2008.</span><span>)</span></a>, 
-      or other download methods. Metalink clients SHOULD switch downloads from one mirror to another if a mirror becomes unreachable. Metalink clients MAY support multi-source, or parallel, 
-      downloads, where portions of a file can be downloaded from multiple mirrors simultaneously (and optionally, from Peer-to-Peer sources). Metalink clients SHOULD support error recovery by using the cryptographic hashes of parts of the file listed in Metalink/XML files. Metalink clients SHOULD support checking digital signatures.
+<p>Metalink clients SHOULD support checking digital signatures. Digital signatures should be given preference over file hashes, if both are included in a Metalink/XML file.
 </p>
 <p>Metalink/XML clients MUST process metalinks available by URI. They MAY process local Metalinks.
 </p>
@@ -363,16 +367,14 @@ Metalink/XML Clients</h3>
 
 [[What about misconfigured/unupdated servers that do not have correct MIME type? SHOULD(?) clients recognize Metalinks by file extension as well?]]
 </p>
-<p>If Metalink/XML clients support HTTP, SHOULD(?) support "transparent metalink" usage from regular download to Metalink/XML (see <a class='info' href='#metalinkxml'>Section&nbsp;3.1<span> (</span><span class='info'>Transparent Metalink/XML Usage</span><span>)</span></a>).
+<p>If Metalink/XML clients support HTTP, they SHOULD support "transparent metalink" usage to upgrade from a regular download to an enhanced download, using the information in the Metalink/XML file.(see <a class='info' href='#metalinkxml'>Section&nbsp;3.1<span> (</span><span class='info'>Transparent Metalink/XML Usage</span><span>)</span></a>).
 </p>
-<p>If Metalink/XML clients support HTTP, MAY do Accept header transparent content negotiation. (deprecated?)
-</p>
-<p>If a file with same name already exists locally, Metalink/XML clients SHOULD verify full file hash and if hash is correct, do not re-download the file. If a file exists and full file hash is incorrect, Metalink/XML clients MAY repair file if partial file hashes exist. otherwise, MAY write to other file name (file_2 or file(2) like some apps already do).
+<p>If a file with same name already exists locally, Metalink/XML clients SHOULD verify full file hash and if hash is correct, do not re-download the file. If a file exists and full file hash is incorrect, Metalink/XML clients MAY repair file if partial file hashes exist. Otherwise, Metalink/XML clients MAY write to a different output file name (file_2 or file(2) like some apps already do).
 </p>
 <p>Metalink/XML clients SHOULD (or MUST?) verify full file hash after download completes. If there is an error, MUST describe as corrupted and MAY re-download or keep download?
 SHOULD verify chunk hash if available and re-get error parts. SHOULD (or MAY?) be done during initial download process, MAY be done after download completed or to repair file downloaded another way?
 </p>
-<p>Metalink/XML clients SHOULD(?) use BitTorrent chunk hashes with HTTP/FTP downloads to repair file if client supports torrents. (What if chunk hashes are present in torrent and metalink, should one be preferred?)
+<p>Metalink/XML clients SHOULD(?) use BitTorrent chunk hashes with HTTP/FTP downloads to repair file errors if the client supports torrents downloads. (What if chunk hashes are present in torrent and metalink, should one be preferred?)
 </p>
 <p>If client supports Metalink/XML AND Metalink/HTTP, which should be preferred (in case mirrors/hashes differ)?
 </p>
@@ -385,15 +387,17 @@ SHOULD verify chunk hash if available and re-get error parts. SHOULD (or MAY?) b
 </p>
 <p>If a client supports Metalink/HTTP and Metalink/XML, it MAY prefer Metalink/HTTP but still use partial file hashes in the Metalink/XML files.
 </p>
-<p>Metalink/XML clients MAY create directory structure described in the Metalink/XML at download location (relative), but see <a class='info' href='#traversalfilenames'>Section&nbsp;7.1<span> (</span><span class='info'>Directory Traversal and Safe file names</span><span>)</span></a>.
+<p>Metalink/XML clients MAY create the directory structure described in the Metalink/XML at a relative download location, but see <a class='info' href='#traversalfilenames'>Section&nbsp;7.1<span> (</span><span class='info'>Directory Traversal and Safe file names</span><span>)</span></a>.
 </p>
-<p>Metalink clients SHOULD? use the location of the original Metalink in the "Referer" header field for these ranged requests.
+<p>Metalink clients could use the location of the original Metalink in the "Referer" header field for these ranged requests.
 </p>
 <p>Metalink clients MAY support the use of metainfo files (such as BitTorrent) for downloading files.
 </p>
 <p>Metalink clients SHOULD support the use of OpenPGP signatures.
 </p>
 <p>Metalink clients SHOULD support the use of S/MIME <a class='info' href='#RFC5751'>[RFC5751]<span> (</span><span class='info'>Ramsdell, B. and S. Turner, &ldquo;Secure/Multipurpose Internet Mail Extensions (S/MIME) Version 3.2 Message Specification,&rdquo; January&nbsp;2010.</span><span>)</span></a> signatures.
+</p>
+<p>Previously, Metalink/XML clients that support HTTP would do Accept header transparent content negotiation, but this has been deprecated.
 </p>
 <p>[[ NOTE: A number of requirements of Metalink clients are also in <a class='info' href='#RFC5854'>[RFC5854]<span> (</span><span class='info'>Bryan, A., Tsujikawa, T., McNab, N., and P. Poeml, &ldquo;The Metalink Download Description Format,&rdquo; June&nbsp;2010.</span><span>)</span></a>. Should these be repeated or referenced?]]
 </p>
@@ -719,7 +723,15 @@ Document History</h3>
 </li>
 </ul>
 
-<p>-01 : ?, 2012.
+<p>-02 : October 18, 2012.
+	    
+	    </p>
+<ul class="text">
+<li>Minor tweaks.
+</li>
+</ul>
+
+<p>-01 : July 16, 2012.
 	    
 	    </p>
 <ul class="text">
