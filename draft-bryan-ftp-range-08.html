@@ -144,9 +144,10 @@
 <tr><td class="header">Network Working Group</td><td class="header">A. Bryan</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">T. Tsujikawa</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">D. Stenberg</td></tr>
-<tr><td class="header">Expires: July 23, 2013</td><td class="header">January 19, 2013</td></tr>
+<tr><td class="header">Expires: July 26, 2013</td><td class="header">T. Kosse</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">January 22, 2013</td></tr>
 </table></td></tr></table>
-<h1><br />File Transfer Protocol RANG Command for Octet Ranges<br />draft-bryan-ftp-range-07</h1>
+<h1><br />File Transfer Protocol RANG Command for Octet Ranges<br />draft-bryan-ftp-range-08</h1>
 
 <h3>Abstract</h3>
 
@@ -184,7 +185,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on July 23, 2013.</p>
+This Internet-Draft will expire on July 26, 2013.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -428,8 +429,8 @@ octet range of a file from a server-FTP process.
 <p>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
    range-command = "RANG" SP start-point SP end-point CRLF
-   start-point = 1*DIGIT
-   end-point = 1*DIGIT
+   start-point   = 1*DIGIT
+   end-point     = 1*DIGIT
 </pre></div>
 
 <p>[NOTE: end-point is inclusive.]
@@ -463,28 +464,42 @@ is reinitialized with REIN but this terminates the user and resets all parameter
 
 <p>Server-FTP processes may permit transfer commands other than RETR and
 STOR, such as APPE and STOU, to complete a restart or repair;
-however, this is
-not recommended.  STOU (store unique) is undefined in this usage, as
-storing the remainder of a file into a unique file name is rarely
-going to be useful.  If APPE (append) is permitted, it MUST act
-identically to STOR when a restart marker has been set.  That is, in
-both cases, octets from the data connection are placed into the file
-at the location indicated by the restart marker value.
+however, this is not recommended.  STOU (store unique) is undefined
+in this usage, as storing the remainder of a file into a unique file
+name is rarely going to be useful.  If APPE (append) is permitted, it
+MUST act identically to STOR when a range has been requested.
+That is, in both cases, octets from the data connection are placed
+into the file at the location bounded by the start-point and end-point values.
 </p>
-<p>The RANG command is intended to complete or repair a failed transfer.  Use with
-RETR is comparatively well defined in all cases, as the client bears
-the responsibility of merging the retrieved data with the partially
-retrieved file.  It may choose to use the data obtained other than to
-complete an earlier transfer, or to re-retrieve data that had been
-retrieved before.  With STOR, however, the server must insert the
-data into the file named.  The results are undefined if a client uses
-RANG to do other than restart to complete a transfer of a file that
-had previously failed to completely transfer.  In particular, if the
-restart marker set with a RANG command is not at the end of the data
-currently stored at the server, as reported by the server, or if
-insufficient data are provided in a STOR that follows a RANG to
-extend the destination file to at least its previous size, then the
-effects are undefined.
+<p>The RANG command can be used to either resume failed transfer
+or to selectively modify a range of octets in a file. Use with RETR is
+comparatively well defined in all cases, as the
+client bears the responsibility of merging the retrieved data with
+the partially retrieved file. It may choose to use the data obtained
+other than to complete an earlier transfer, or to re-retrieve data
+that had been retrieved before.
+</p>
+<p>The server-PI SHOULD transfer 0 octets with RETR if the specified start
+point or start point and end point are larger than the actual file size.
+</p>
+<p>The server-PI SHOULD transfer the whole range from the start point to the end of the file with RETR if the end point is larger than the actual file.
+</p>
+<p>With STOR however, the server-PI must insert the data into the file named.
+The combination of RANG and STOR MUST NOT modify any data
+outside the specified range. For a successful transfer, the client has to
+send the full range specified. If the client sends a different amount of
+octets or if the connection is aborted, the results are unspecified for the
+data in the specified range only.
+</p>
+<p>The server-PI should reject the STOR if a client issues a RANG with a
+start-point greater than the actual file size. If the start-point is less
+than or equal to the file size, the file is opened for writing, continuing
+at start-point.
+</p>
+<p>If the file has been smaller than end-point prior to the
+STOR, it will be exactly end-point octets in size after a successful
+transfer. The RANG command MUST NOT cause a file to be truncated, if the end-point
+is smaller than or equal to the file size, the file size MUST remain unmodified.
 </p>
 <p>The RANG command MUST be the last command issued before the data
 transfer command that is to cause a partial data transfer.  The
@@ -508,11 +523,6 @@ start-point and/or end-point octet range out of range, should be
 reported when the following transfer command is issued.  Such
 errors will cause that transfer request to be rejected with an
 error indicating the invalid restart attempt.
-</p>
-<p>The server-PI SHOULD transfer 0 octets with RETR if the specified start
-point or start point and end point are larger than the actual file size.
-</p>
-<p>The server-PI SHOULD transfer the whole range from the start point to the end of the file with RETR if the end point is larger than the actual file.
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -599,7 +609,7 @@ can be sent by the server-PI, as specified in <a class='info' href='#RFC0959'>[R
 <a name="rfc.section.5"></a><h3>5.&nbsp;
 RANG Command Use with Other Commands</h3>
 
-<p>This specification defines the use of RANG in a certain way. Other commands could decide to use RANG in a similar way, to select an octet range, and their specification would
+<p>This specification defines the use of RANG in combination with other specific commands. Other commands are undefined but could decide to use RANG in a similar way, to select an octet range, and their specification would
 define how they operate with RANG. The HASH command <a class='info' href='#draft-bryan-ftpext-hash'>[draft&#8209;bryan&#8209;ftpext&#8209;hash]<span> (</span><span class='info'>Bryan, A., Kosse, T., and D. Stenberg, &ldquo;FTP Extensions for Cryptographic Hashes,&rdquo; .</span><span>)</span></a> uses RANG to select an octet range for partial file hashing.
 </p>
 <a name="IANA"></a><br /><hr />
@@ -783,5 +793,12 @@ Document History</h3>
 <td class="author-text"><a href="mailto:daniel@haxx.se">daniel@haxx.se</a></td></tr>
 <tr><td class="author" align="right">URI:&nbsp;</td>
 <td class="author-text"><a href="http://www.haxx.se/">http://www.haxx.se/</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Tim Kosse</td></tr>
+<tr><td class="author" align="right">Email:&nbsp;</td>
+<td class="author-text"><a href="mailto:tim.kosse@filezilla-project.org">tim.kosse@filezilla-project.org</a></td></tr>
+<tr><td class="author" align="right">URI:&nbsp;</td>
+<td class="author-text"><a href="http://filezilla-project.org/">http://filezilla-project.org/</a></td></tr>
 </table>
 </body></html>
