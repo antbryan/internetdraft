@@ -222,7 +222,7 @@ data, it would be identical to the hash returned by HASH.</t>
 
 <section title="FEAT Command Response for HASH Command">
 
-<t>When replying to the FEAT command <xref target="RFC2389"/>, a server-FTP process that supports the HASH command MUST include a feature line indicating that the HASH command is supported, along with a list of all supported hash algorithms in a semicolon separated list. The hash algorithm that is currently selected MUST be marked with an asterisk. The order of hash algorithms is insignificant.
+<t>When replying to the FEAT command <xref target="RFC2389"/>, a server-FTP process that supports the HASH command MUST include a feature line indicating that the HASH command is supported, along with a list of all supported hash algorithms, including the currently selected hash algorithm, in a semicolon separated list. The server-FTP process MUST use the "Hash Function Name" as defined in the IANA registry named "Hash Function Textual Names" for possible supported hash algorithms. Hash names SHOULD be presented in uppercase, but comparisons should be case-insensitive, e.g. MD5, md5, Md5 are all the same. The hash algorithm that is currently selected MUST be marked with an asterisk. The order of hash algorithms is insignificant.
 This command word is case insensitive, and MAY be sent in any mixture of upper or lower case, however it SHOULD be sent in upper case. That is, the response SHOULD be:</t>
 
 <t><figure> 
@@ -237,8 +237,6 @@ This command word is case insensitive, and MAY be sent in any mixture of upper o
 </artwork></figure></t>
 
 <t>The ellipses indicate place holders where other features may be included, and are not required. The one-space indentation of the feature lines is mandatory <xref target="RFC2389"/>.</t>
-
-<t>The IANA registry named "Hash Function Textual Names" defines values for hash algorithms. Hash names SHOULD be presented in uppercase, but comparisons should be case-insensitive, e.g. MD5, md5, Md5 are all the same.</t>
 
 <t><figure> 
 	  <preamble></preamble>
@@ -712,6 +710,14 @@ purpose is an implementation decision.</t>
 	      <t>Should HASH use "MLSx style" responses? S> 213 Hash.SHA-1=80bc95fd3...;Range=0-199; filename.ext</t>
 
 	    </list></t>
+		
+<t>draft-bryan-ftpext-hash-02 : January , 2013
+
+	    <list style="symbols">
+
+	      <t>Refinements.</t>
+	    </list></t>
+
 <t>draft-bryan-ftpext-hash-01 : January 19, 2013
 
 	    <list style="symbols">
