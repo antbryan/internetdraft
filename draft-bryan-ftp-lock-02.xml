@@ -98,11 +98,11 @@
    S&gt; 200 LOCK OK to current port
    C&gt; RETR filename.ext
    S&gt; 150 Opening BINARY mode
-   boundary=separator189dhde78b287734237842g3847g
-   --separator189dhde78b287734237842g3847g
+   S&gt; boundary=separator189dhde78b287734237842g3847g
+   S&gt; --separator189dhde78b287734237842g3847g
    
-   [raw binary data]
-   --separator189dhde78b287734237842g3847g--
+   [Server sends raw binary data]
+   S&gt; --separator189dhde78b287734237842g3847g--
    S&gt; 226 Transfer complete.
 </artwork></figure></t>
 
@@ -296,11 +296,11 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
    S&gt; 200 LOCK OK to current port
    C&gt; RETR filename.ext
    S&gt; 150 Opening BINARY mode
-   boundary=separator189dhde78b287734237842g3847g
-   --separator189dhde78b287734237842g3847g
+   S&gt; boundary=separator189dhde78b287734237842g3847g
+   S&gt; --separator189dhde78b287734237842g3847g
    
-   [raw binary data]
-   --separator189dhde78b287734237842g3847g--
+   [Server sends raw binary data]
+   S&gt; --separator189dhde78b287734237842g3847g--
    S&gt; 226 Transfer complete.
 </artwork></figure></t>
 
@@ -470,7 +470,7 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 	    </references> 
 
 	    <section title="Acknowledgements and Contributors">
-		  <t>Thanks to the FTPEXT2 Working Group and Robert McMurray.</t>
+		  <t>Thanks to the FTPEXT2 Working Group, Robert McMurray, and Alun Jones.</t>
 
 
 
@@ -484,6 +484,12 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 
 	    </list></t>
 
+<t>draft-bryan-ftp-lock-02 : January , 2013.
+	    
+	    <list style="symbols">
+
+	      <t>FTPEXT mailing list feedback.</t>
+	    </list></t>
 		
 <t>draft-bryan-ftp-lock-01 : January 19, 2013.
 	    
