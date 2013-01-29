@@ -242,6 +242,8 @@ so if the server supports LOCK and the client prefers LOCK, then LOCK should be 
 
 <t>If the LOCK command is issued after a data connection has already been opened, it will continue to completion uninterrupted and close once finished.</t>
 
+<t>To turn off LOCK and return to the previous behavior, a client can issue a PORT, PASV, or similar command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.</t>
+
 
 <section title="FEAT Command Response for LOCK Command">
 
@@ -471,8 +473,12 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 
 	    <section title="Acknowledgements and Contributors">
 		  <t>Thanks to the FTPEXT2 Working Group, Robert McMurray, and Alun Jones.</t>
+		</section>
 
-
+	    <section title="Two Port FTP">
+		  <t><xref target="RFC0959"/> already defines a mechanism - Block Mode over the default port - which does not require PORT or PASV to operate, and does not close connections between files. 
+		  This means that under such a scheme, a firewall's life is made easier - you open 21 inbound, and allow outbound connections from port 20 on the server.</t>
+		</section>
 
 
 	    <section title="Document History" anchor="dochistory">
@@ -480,7 +486,7 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 		<t>Known issues concerning this draft:
 	    <list style="symbols"> 
 	      
-		  <t>Should there be a way to unLOCK and go back to two connection style?</t>
+		  <t>https://github.com/antbryan/internetdraft/issues</t>
 
 	    </list></t>
 
@@ -506,6 +512,5 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 	    </list></t>
 		
 	    </section>
-		</section>
 	  </back> 
 	</rfc>

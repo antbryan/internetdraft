@@ -166,7 +166,7 @@
   
 </p>
 <p>
-    The changes in this draft are summarized in <a class='info' href='#dochistory'>Appendix&nbsp;A.1<span> (</span><span class='info'>Document History</span><span>)</span></a>.
+    The changes in this draft are summarized in <a class='info' href='#dochistory'>Appendix&nbsp;C<span> (</span><span class='info'>Document History</span><span>)</span></a>.
   
 </p>
 <h3>Status of This Memo</h3>
@@ -235,7 +235,9 @@ Normative References<br />
 Informative References<br />
 <a href="#anchor13">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements and Contributors<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#dochistory">A.1.</a>&nbsp;
+<a href="#anchor14">Appendix&nbsp;B.</a>&nbsp;
+Two Port FTP<br />
+<a href="#dochistory">Appendix&nbsp;C.</a>&nbsp;
 Document History<br />
 </p>
 <br clear="all" />
@@ -424,6 +426,8 @@ so if the server supports LOCK and the client prefers LOCK, then LOCK should be 
 </p>
 <p>If the LOCK command is issued after a data connection has already been opened, it will continue to completion uninterrupted and close once finished.
 </p>
+<p>To turn off LOCK and return to the previous behavior, a client can issue a PORT, PASV, or similar command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.
+</p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5.1"></a><h3>5.1.&nbsp;
@@ -561,9 +565,17 @@ Acknowledgements and Contributors</h3>
 
 <p>Thanks to the FTPEXT2 Working Group, Robert McMurray, and Alun Jones.
 </p>
+<a name="anchor14"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.B"></a><h3>Appendix B.&nbsp;
+Two Port FTP</h3>
+
+<p><a class='info' href='#RFC0959'>[RFC0959]<span> (</span><span class='info'>Postel, J. and J. Reynolds, &ldquo;File Transfer Protocol,&rdquo; October&nbsp;1985.</span><span>)</span></a> already defines a mechanism - Block Mode over the default port - which does not require PORT or PASV to operate, and does not close connections between files. 
+		  This means that under such a scheme, a firewall's life is made easier - you open 21 inbound, and allow outbound connections from port 20 on the server.
+</p>
 <a name="dochistory"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.A.1"></a><h3>A.1.&nbsp;
+<a name="rfc.section.C"></a><h3>Appendix C.&nbsp;
 Document History</h3>
 
 <p>[[ to be removed by the RFC editor before publication as an RFC. ]]
@@ -571,7 +583,7 @@ Document History</h3>
 <p>Known issues concerning this draft:
 	    </p>
 <ul class="text">
-<li>Should there be a way to unLOCK and go back to two connection style?
+<li>https://github.com/antbryan/internetdraft/issues
 </li>
 </ul>
 

@@ -27,7 +27,7 @@ Editorial Note (To be removed by RFC Editor)
    item.  Related documents (including fancy diffs) can be found at
    <http://tools.ietf.org/wg/ftpext2/>.
 
-   The changes in this draft are summarized in Appendix A.1.
+   The changes in this draft are summarized in Appendix C.
 
 Status of This Memo
 
@@ -78,17 +78,17 @@ Table of Contents
      3.2.  Server Replies  . . . . . . . . . . . . . . . . . . . . . . 5
    4.  FTP Data Transfers Over Control Connection  . . . . . . . . . . 5
    5.  The LOCK Command (LOCK) . . . . . . . . . . . . . . . . . . . . 5
-     5.1.  FEAT Command Response for LOCK Command  . . . . . . . . . . 6
+     5.1.  FEAT Command Response for LOCK Command  . . . . . . . . . . 7
      5.2.  User-PI usage of LOCK . . . . . . . . . . . . . . . . . . . 7
      5.3.  LOCK Command Errors . . . . . . . . . . . . . . . . . . . . 8
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 8
    7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 8
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 8
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . . . 8
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . . . 9
      8.2.  Informative References  . . . . . . . . . . . . . . . . . . 9
    Appendix A.  Acknowledgements and Contributors  . . . . . . . . . . 9
-     A.1.  Document History  . . . . . . . . . . . . . . . . . . . . . 9
-
+   Appendix B.  Two Port FTP . . . . . . . . . . . . . . . . . . . . . 9
+   Appendix C.  Document History . . . . . . . . . . . . . . . . . . . 9
 
 
 
@@ -322,13 +322,13 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    been opened, it will continue to completion uninterrupted and close
    once finished.
 
-5.1.  FEAT Command Response for LOCK Command
+   To turn off LOCK and return to the previous behavior, a client can
+   issue a PORT, PASV, or similar command.  Another alternative is to
+   reinitialize the session with REIN but this terminates the user and
+   resets all parameters.
 
-   When replying to the FEAT command [RFC2389], a server-FTP process
-   that supports the LOCK command, as specified here, MUST include, a
-   line containing exactly the string "LOCK".  This string is case
-   insensitive, and MAY be sent in any mixture of upper or lower case,
-   however it SHOULD be sent in upper case.  That is, the response
+
+
 
 
 
@@ -337,6 +337,13 @@ Bryan, et al.            Expires August 2, 2013                 [Page 6]
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
+5.1.  FEAT Command Response for LOCK Command
+
+   When replying to the FEAT command [RFC2389], a server-FTP process
+   that supports the LOCK command, as specified here, MUST include, a
+   line containing exactly the string "LOCK".  This string is case
+   insensitive, and MAY be sent in any mixture of upper or lower case,
+   however it SHOULD be sent in upper case.  That is, the response
    SHOULD be:
 
 
@@ -371,6 +378,21 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    connection, instead of opening another port.
 
 
+
+
+
+
+
+
+
+
+
+
+Bryan, et al.            Expires August 2, 2013                 [Page 7]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+
+
       C> TYPE I
       S> 200 Type set to I.
       C> LOCK
@@ -383,15 +405,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
       [Server sends raw binary data]
       S> --separator189dhde78b287734237842g3847g--
       S> 226 Transfer complete.
-
-
-
-
-
-Bryan, et al.            Expires August 2, 2013                 [Page 7]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
 
 5.3.  LOCK Command Errors
 
@@ -429,6 +442,13 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 8.  References
 
+
+
+Bryan, et al.            Expires August 2, 2013                 [Page 8]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+
+
 8.1.  Normative References
 
    [RFC0959]  Postel, J. and J. Reynolds, "File Transfer Protocol",
@@ -441,14 +461,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
               the File Transfer Protocol", RFC 2389, August 1998.
 
    [RFC5234]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
-
-
-
-Bryan, et al.            Expires August 2, 2013                 [Page 8]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
-
               Specifications: ABNF", STD 68, RFC 5234, January 2008.
 
 8.2.  Informative References
@@ -463,20 +475,35 @@ Appendix A.  Acknowledgements and Contributors
 
    Thanks to the FTPEXT2 Working Group, Robert McMurray, and Alun Jones.
 
-A.1.  Document History
+Appendix B.  Two Port FTP
+
+   [RFC0959] already defines a mechanism - Block Mode over the default
+   port - which does not require PORT or PASV to operate, and does not
+   close connections between files.  This means that under such a
+   scheme, a firewall's life is made easier - you open 21 inbound, and
+   allow outbound connections from port 20 on the server.
+
+Appendix C.  Document History
 
    [[ to be removed by the RFC editor before publication as an RFC. ]]
 
    Known issues concerning this draft:
 
-   o  Should there be a way to unLOCK and go back to two connection
-      style?
+   o  https://github.com/antbryan/internetdraft/issues
 
    draft-bryan-ftp-lock-02 : January , 2013.
 
    o  FTPEXT mailing list feedback.
 
    draft-bryan-ftp-lock-01 : January 19, 2013.
+
+
+
+
+Bryan, et al.            Expires August 2, 2013                 [Page 9]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+
 
    o  Draft had expired.
 
@@ -494,17 +521,6 @@ Authors' Addresses
    URI:   http://www.metalinker.org
 
 
-
-
-
-
-
-
-Bryan, et al.            Expires August 2, 2013                 [Page 9]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
-
    Daniel Stenberg
 
    EMail: daniel@haxx.se
@@ -517,22 +533,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
    EMail: tatsuhiro.t@gmail.com
    URI:   http://aria2.sourceforge.net
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
