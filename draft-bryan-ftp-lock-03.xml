@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><?rfc linefile="1:draft-bryan-ftp-lock-02.xml"?>
+<?xml version="1.0" encoding="UTF-8"?><?rfc linefile="1:draft-bryan-ftp-lock-03.xml"?>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc toc="yes" ?>
@@ -16,7 +16,7 @@
 <!DOCTYPE rfc
   PUBLIC "" "rfc2629.dtd">
   
-<rfc category="std" docName="draft-bryan-ftp-lock-02" ipr="trust200902">
+<rfc category="std" docName="draft-bryan-ftp-lock-03" ipr="trust200902">
 
     <front>        
       <title abbrev="FTP LOCK Command for Using a Single Port">File Transfer Protocol LOCK Command for Using a Single Port</title>
@@ -520,8 +520,14 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 		  <t><eref target="https://github.com/antbryan/internetdraft/issues"/></t>
 
 	    </list></t>
+<t>draft-bryan-ftp-lock-03 : , 2013.
+	    
+	    <list style="symbols">
 
-<t>draft-bryan-ftp-lock-02 : January 30, 2013.
+	      <t>.</t>
+	    </list></t>
+
+<t>draft-bryan-ftp-lock-02 : January , 2013.
 	    
 	    <list style="symbols">
 

@@ -9,7 +9,7 @@ Expires: August 3, 2013                                         T. Kosse
 
 
           File Transfer Protocol RANG Command for Octet Ranges
-                        draft-bryan-ftp-range-08
+                        draft-bryan-ftp-range-09
 
 Abstract
 
@@ -631,6 +631,9 @@ Appendix B.  Document History
    Known issues concerning this draft:
    o  <https://github.com/antbryan/internetdraft/issues>
 
+   draft-bryan-ftp-range-09 : , 2013.
+   o  .
+
    draft-bryan-ftp-range-08 : January 30, 2013.
    o  Re-organize, RANG is not transfer specific, it can be used by
       other commands like HASH.  FTPEXT2 mailing list feedback.
@@ -658,9 +661,6 @@ Appendix B.  Document History
 
    draft-bryan-ftp-range-00 : December 13, 2010.
    o  Initial draft.
-
-
-
 
 
 

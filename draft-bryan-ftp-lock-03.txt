@@ -8,7 +8,7 @@ Expires: August 3, 2013                                 January 30, 2013
 
 
       File Transfer Protocol LOCK Command for Using a Single Port
-                        draft-bryan-ftp-lock-02
+                        draft-bryan-ftp-lock-03
 
 Abstract
 
@@ -528,7 +528,11 @@ Appendix C.  Document History
 
    o  <https://github.com/antbryan/internetdraft/issues>
 
-   draft-bryan-ftp-lock-02 : January 30, 2013.
+   draft-bryan-ftp-lock-03 : , 2013.
+
+   o  .
+
+   draft-bryan-ftp-lock-02 : January , 2013.
 
    o  FTPEXT2 mailing list feedback.
 
@@ -548,10 +552,6 @@ Authors' Addresses
 
    EMail: anthonybryan@gmail.com
    URI:   http://www.metalinker.org
-
-
-
-
 
 
 
