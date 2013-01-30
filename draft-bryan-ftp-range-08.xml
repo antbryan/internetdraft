@@ -374,7 +374,7 @@ error indicating the invalid restart attempt.</t>
 
 </section>
 
-<section title="User-PI usage of RANG with RETR">
+<section title="User-PI usage of RANG with RETR and STOR">
 
 <t>The user-PI issues the FEAT command to query the server-PI if it supports the RANG command. In this example, the server-PI also supports REST.</t>
 
@@ -392,9 +392,9 @@ error indicating the invalid restart attempt.</t>
 
 <t>
    Assume that the transfer of a largish file has previously been
-   interrupted after 802816 octets had been received, that the transfer should stop at octet 1000000 of the file, that the previous
+   interrupted after 802816 octets had been received by the client, that the transfer should stop at octet 1000000 of the file, that the previous
    transfer was with TYPE=I, and that it has been verified that the file
-   on the server has not since changed.
+   on the server has not since changed. In the example below, data is sent from offset 802816 to, and including, offset 1000000
 <figure>
 	  <preamble></preamble>
 	  <artwork type="example">
@@ -410,7 +410,27 @@ error indicating the invalid restart attempt.</t>
    S&gt; 226 Transfer complete.
 </artwork></figure></t>
 
-<t>In the above example, data is sent from offset 802816 to, and including, offset 1000000.</t>
+<t>In this example below with STOR, assume that the transfer of a largish file has previously been
+   interrupted after 802816 octets had been received by the server, that the transfer should stop at octet 1000000 of the file, that the previous
+   transfer was with TYPE=I, and that it has been verified that the file
+   on the server has not since changed. In the example below, data is sent from offset 802816 to, and including, offset 1000000
+<figure>
+	  <preamble></preamble>
+	  <artwork type="example">
+   C&gt; TYPE I
+   S&gt; 200 Type set to I.
+   C&gt; PORT 127,0,0,1,15,107
+   S&gt; 200 PORT command successful.
+   C&gt; SIZE metalinkc.py
+   S&gt; 213 10000
+   C&gt; RANG 802816 1000000
+   S&gt; 350 Restarting at 802816. End Byte range at 1000000.
+   C&gt; STOR metalinkc.py
+   S&gt; 125 Data connection already open; Transfer starting.
+   [...]
+   S&gt; 226 Transfer complete.
+</artwork></figure></t>
+
 
 </section>
 </section>

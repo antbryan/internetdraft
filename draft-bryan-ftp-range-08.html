@@ -225,7 +225,7 @@ Error Recovery and Range Requests<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.3.</a>&nbsp;
 RETR and STOR<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.4.</a>&nbsp;
-User-PI usage of RANG with RETR<br />
+User-PI usage of RANG with RETR and STOR<br />
 <a href="#anchor11">5.</a>&nbsp;
 RANG Command Errors<br />
 <a href="#anchor12">6.</a>&nbsp;
@@ -569,7 +569,7 @@ error indicating the invalid restart attempt.
 <a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
-User-PI usage of RANG with RETR</h3>
+User-PI usage of RANG with RETR and STOR</h3>
 
 <p>The user-PI issues the FEAT command to query the server-PI if it supports the RANG command. In this example, the server-PI also supports REST.
 </p>
@@ -587,9 +587,9 @@ User-PI usage of RANG with RETR</h3>
 
 <p>
    Assume that the transfer of a largish file has previously been
-   interrupted after 802816 octets had been received, that the transfer should stop at octet 1000000 of the file, that the previous
+   interrupted after 802816 octets had been received by the client, that the transfer should stop at octet 1000000 of the file, that the previous
    transfer was with TYPE=I, and that it has been verified that the file
-   on the server has not since changed.
+   on the server has not since changed. In the example below, data is sent from offset 802816 to, and including, offset 1000000
 
 <p>
 </p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
@@ -605,8 +605,27 @@ User-PI usage of RANG with RETR</h3>
    S&gt; 226 Transfer complete.
 </pre></div>
 
-<p>In the above example, data is sent from offset 802816 to, and including, offset 1000000.
-</p>
+<p>In this example below with STOR, assume that the transfer of a largish file has previously been
+   interrupted after 802816 octets had been received by the server, that the transfer should stop at octet 1000000 of the file, that the previous
+   transfer was with TYPE=I, and that it has been verified that the file
+   on the server has not since changed. In the example below, data is sent from offset 802816 to, and including, offset 1000000
+
+<p>
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+   C&gt; TYPE I
+   S&gt; 200 Type set to I.
+   C&gt; PORT 127,0,0,1,15,107
+   S&gt; 200 PORT command successful.
+   C&gt; SIZE metalinkc.py
+   S&gt; 213 10000
+   C&gt; RANG 802816 1000000
+   S&gt; 350 Restarting at 802816. End Byte range at 1000000.
+   C&gt; STOR metalinkc.py
+   S&gt; 125 Data connection already open; Transfer starting.
+   [...]
+   S&gt; 226 Transfer complete.
+</pre></div>
+
 <a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
