@@ -4,8 +4,8 @@
 Network Working Group                                           A. Bryan
 Internet-Draft                                              T. Tsujikawa
 Intended status: Standards Track                             D. Stenberg
-Expires: August 2, 2013                                         T. Kosse
-                                                        January 29, 2013
+Expires: August 3, 2013                                         T. Kosse
+                                                        January 30, 2013
 
 
           File Transfer Protocol RANG Command for Octet Ranges
@@ -45,14 +45,14 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 2, 2013.
+   This Internet-Draft will expire on August 3, 2013.
 
 Copyright Notice
 
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 1]
+Bryan, et al.            Expires August 3, 2013                 [Page 1]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
@@ -77,19 +77,20 @@ Table of Contents
    2.  Document Conventions . . . . . . . . . . . . . . . . . . . . .  3
      2.1.  Basic Tokens . . . . . . . . . . . . . . . . . . . . . . .  4
      2.2.  Server Replies . . . . . . . . . . . . . . . . . . . . . .  4
-   3.  Octet Ranges in STREAM Mode  . . . . . . . . . . . . . . . . .  4
-     3.1.  Error Recovery and Range Requests  . . . . . . . . . . . .  5
-   4.  The RANGe Command (RANG) . . . . . . . . . . . . . . . . . . .  6
-     4.1.  FEAT Command Response for RANG Command . . . . . . . . . .  7
-     4.2.  RANG Command use with RETR and STOR  . . . . . . . . . . .  7
-       4.2.1.  User-PI usage of RANG with RETR  . . . . . . . . . . .  9
-     4.3.  RANG Command Errors  . . . . . . . . . . . . . . . . . . .  9
-   5.  RANG Command Use with Other Commands . . . . . . . . . . . . . 10
-   6.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 10
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . . 10
-   8.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 10
-     8.1.  Normative References . . . . . . . . . . . . . . . . . . . 10
-     8.2.  Informative References . . . . . . . . . . . . . . . . . . 11
+   3.  The RANGe Command (RANG) . . . . . . . . . . . . . . . . . . .  4
+     3.1.  FEAT Command Response for RANG Command . . . . . . . . . .  5
+   4.  RANG Command Use with RETR and STOR  . . . . . . . . . . . . .  6
+     4.1.  Octet Ranges in STREAM Mode  . . . . . . . . . . . . . . .  6
+     4.2.  Error Recovery and Range Requests  . . . . . . . . . . . .  7
+     4.3.  RETR and STOR  . . . . . . . . . . . . . . . . . . . . . .  7
+     4.4.  User-PI usage of RANG with RETR  . . . . . . . . . . . . .  9
+   5.  RANG Command Errors  . . . . . . . . . . . . . . . . . . . . .  9
+   6.  RANG Command Use with Other Commands . . . . . . . . . . . . . 10
+   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 10
+   8.  Security Considerations  . . . . . . . . . . . . . . . . . . . 10
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     9.1.  Normative References . . . . . . . . . . . . . . . . . . . 10
+     9.2.  Informative References . . . . . . . . . . . . . . . . . . 11
    Appendix A.  Acknowledgements and Contributors . . . . . . . . . . 11
    Appendix B.  Document History  . . . . . . . . . . . . . . . . . . 11
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 12
@@ -107,8 +108,7 @@ Table of Contents
 
 
 
-
-Bryan, et al.            Expires August 2, 2013                 [Page 2]
+Bryan, et al.            Expires August 3, 2013                 [Page 2]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
@@ -164,7 +164,7 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 3]
+Bryan, et al.            Expires August 3, 2013                 [Page 3]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
@@ -213,87 +213,18 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    means a reply from the server-PI using the three digit code "500".
 
 
-3.  Octet Ranges in STREAM Mode
-
-   To get a specific part of a file without sending entire file, both
-   sides need some way to agree on where in the data stream to start and
-
-
-
-Bryan, et al.            Expires August 2, 2013                 [Page 4]
-
-Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
-
-
-   end the data transfer.
-
-   In STREAM mode, the data connection contains just a stream of
-   unformatted octets of data.  Explicit restart markers thus cannot be
-   inserted into the data stream, they would be indistinguishable from
-   data.  For this reason, the FTP specification [RFC0959] did not
-   provide the ability to do restarts in stream mode.  However, there is
-   not really a need to have explicit restart markers in this case, as
-   restart markers can be implied by the octet offset into the data
-   stream.
-
-   Because the data stream defines the file in STREAM mode, a different
-   data stream would represent a different file.  Thus, an offset will
-   always represent the same position within a file.  On the other hand,
-   in other modes than STREAM, the same file can be transferred using
-   quite different octet sequences and yet be reconstructed into the one
-   identical file.  Thus an offset into the data stream in transfer
-   modes other than STREAM would not give an unambiguous restart or end
-   point.
-
-   If the data representation TYPE is IMAGE and the STRUcture is File,
-   for many systems the file will be stored exactly in the same format
-   as it is sent across the data connection.  It is then usually very
-   easy for the receiver to determine how much data was previously
-   received, and notify the sender of the offset where the transfer
-   should be restarted.  In other representation types and structures
-   more effort will be required, but it remains always possible to
-   determine the offset with finite, but perhaps non-negligible, effort.
-   In the worst case, an FTP process may need to open a data connection
-   to itself, set the appropriate transfer type and structure, and
-   actually transmit the file, counting the transmitted octets.
-
-   If the user-FTP process is intending to restart a retrieve, it will
-   directly calculate the restart marker and send that information in
-   the RANGe command.  However, if the user-FTP process is intending to
-   restart sending the file, it needs to be able to determine how much
-   data was previously sent, and correctly received and saved.  The
-   purpose of the SIZE command, as documented in Section 4 of [RFC3659],
-   is to get this information.
-
-3.1.  Error Recovery and Range Requests
-
-   STREAM mode transfers with FILE STRUcture may be range requested even
-   though no restart marker has been transferred in addition to the data
-   itself.  This is done by using the SIZE command, if needed, in
-   combination with the RANG command, and one of the standard file
-   transfer commands.
-
-
-
-
-Bryan, et al.            Expires August 2, 2013                 [Page 5]
-
-Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
-
-
-   When using TYPE ASCII or IMAGE, the SIZE command will return the
-   number of octets that would actually be transferred if the file were
-   to be sent between the two systems, i.e., with type IMAGE, the SIZE
-   normally would be the number of octets in the file.  With type ASCII,
-   the SIZE would be the number of octets in the file including any
-   modifications required to satisfy the TYPE ASCII CR-LF end-of-line
-   convention.
-
-
-4.  The RANGe Command (RANG)
+3.  The RANGe Command (RANG)
 
    A new command "RANG" is added to the FTP command set to allow the
    client to specify both a start point octet range and an end point
+
+
+
+Bryan, et al.            Expires August 3, 2013                 [Page 4]
+
+Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
+
+
    octet range of a file from a server-FTP process.
 
    The syntax for the RANG command when the current transfer mode is
@@ -331,16 +262,10 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    resets all parameters).
 
 
-
-Bryan, et al.            Expires August 2, 2013                 [Page 6]
-
-Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
-
-
       range-response = range-ok / error-response
       range-ok       = "350" SP *TCHAR CRLF
 
-4.1.  FEAT Command Response for RANG Command
+3.1.  FEAT Command Response for RANG Command
 
    When replying to the FEAT command [RFC2389], a server-FTP process
    that supports the RANG command, as specified here, MUST include, a
@@ -348,6 +273,12 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    case insensitive, and MAY be sent in any mixture of upper or lower
    case, however it SHOULD be sent in upper case.  That is, the response
    SHOULD be:
+
+
+
+Bryan, et al.            Expires August 3, 2013                 [Page 5]
+
+Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
       C> FEAT
@@ -364,9 +295,80 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
       range-feat = SP "RANG" SP "STREAM" CRLF
 
-4.2.  RANG Command use with RETR and STOR
 
-   The RANG command can be used to either resume failed transfer or to
+4.  RANG Command Use with RETR and STOR
+
+4.1.  Octet Ranges in STREAM Mode
+
+   To get a specific part of a file without sending the entire file,
+   both sides need some way to agree on where in the data stream to
+   start and end the data transfer.
+
+   In STREAM mode, the data connection contains just a stream of
+   unformatted octets of data.  Explicit restart markers thus cannot be
+   inserted into the data stream, they would be indistinguishable from
+   data.  For this reason, the FTP specification [RFC0959] did not
+   provide the ability to do restarts in stream mode.  However, there is
+   not really a need to have explicit restart markers in this case, as
+   restart markers can be implied by the octet offset into the data
+   stream.
+
+   Because the data stream defines the file in STREAM mode, a different
+   data stream would represent a different file.  Thus, an offset will
+   always represent the same position within a file.  On the other hand,
+   in other modes than STREAM, the same file can be transferred using
+   quite different octet sequences and yet be reconstructed into the one
+   identical file.  Thus an offset into the data stream in transfer
+   modes other than STREAM would not give an unambiguous restart or end
+   point.
+
+   If the data representation TYPE is IMAGE and the STRUcture is File,
+   for many systems the file will be stored exactly in the same format
+   as it is sent across the data connection.  It is then usually very
+   easy for the receiver to determine how much data was previously
+   received, and notify the sender of the offset where the transfer
+   should be restarted.  In other representation types and structures
+   more effort will be required, but it remains always possible to
+
+
+
+Bryan, et al.            Expires August 3, 2013                 [Page 6]
+
+Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
+
+
+   determine the offset with finite, but perhaps non-negligible, effort.
+   In the worst case, an FTP process may need to open a data connection
+   to itself, set the appropriate transfer type and structure, and
+   actually transmit the file, counting the transmitted octets.
+
+   If the user-FTP process is intending to restart a retrieve, it will
+   directly calculate the restart marker and send that information in
+   the RANGe command.  However, if the user-FTP process is intending to
+   restart sending the file, it needs to be able to determine how much
+   data was previously sent, and correctly received and saved.  The
+   purpose of the SIZE command, as documented in Section 4 of [RFC3659],
+   is to get this information.
+
+4.2.  Error Recovery and Range Requests
+
+   STREAM mode transfers with FILE STRUcture may be range requested even
+   though no restart marker has been transferred in addition to the data
+   itself.  This is done by using the SIZE command, if needed, in
+   combination with the RANG command, and one of the standard file
+   transfer commands.
+
+   When using TYPE ASCII or IMAGE, the SIZE command will return the
+   number of octets that would actually be transferred if the file were
+   to be sent between the two systems, i.e., with type IMAGE, the SIZE
+   normally would be the number of octets in the file.  With type ASCII,
+   the SIZE would be the number of octets in the file including any
+   modifications required to satisfy the TYPE ASCII CR-LF end-of-line
+   convention.
+
+4.3.  RETR and STOR
+
+   The RANG command can be used to either resume a failed transfer or to
    selectively modify a range of octets in a file.  Use with RETR is
    comparatively well defined in all cases, as the client bears the
    responsibility of merging the retrieved data with the partially
@@ -384,15 +386,14 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    the file at the location bounded by the start-point and end-point
    values.
 
-   The server-PI SHOULD transfer 0 octets with RETR if the specified
 
 
-
-Bryan, et al.            Expires August 2, 2013                 [Page 7]
+Bryan, et al.            Expires August 3, 2013                 [Page 7]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
+   The server-PI SHOULD transfer 0 octets with RETR if the specified
    start point or start point and end point are larger than the actual
    file size.
 
@@ -443,13 +444,12 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
 
-
-Bryan, et al.            Expires August 2, 2013                 [Page 8]
+Bryan, et al.            Expires August 3, 2013                 [Page 8]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
-4.2.1.  User-PI usage of RANG with RETR
+4.4.  User-PI usage of RANG with RETR
 
    The user-PI issues the FEAT command to query the server-PI if it
    supports the RANG command.  In this example, the server-PI also
@@ -485,7 +485,8 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    In the above example, data is sent from offset 802816 to, and
    including, offset 1000000.
 
-4.3.  RANG Command Errors
+
+5.  RANG Command Errors
 
    Where the RANG command is unrecognized or there is a syntax error in
    parameters or arguments, a 500 or 501 reply can be sent by the
@@ -499,13 +500,12 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
 
-
-Bryan, et al.            Expires August 2, 2013                 [Page 9]
+Bryan, et al.            Expires August 3, 2013                 [Page 9]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
-5.  RANG Command Use with Other Commands
+6.  RANG Command Use with Other Commands
 
    This specification defines the use of RANG in combination with other
    specific commands.  Other commands are undefined but could decide to
@@ -515,7 +515,7 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    for partial file hashing.
 
 
-6.  IANA Considerations
+7.  IANA Considerations
 
    This new command is added to the "FTP Commands and Extensions"
    registry created by [RFC5797].
@@ -533,16 +533,16 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    Reference: This specification
 
 
-7.  Security Considerations
+8.  Security Considerations
 
    This memo does not directly concern security.  It is not believed
    that any of the mechanisms documented here impact in any particular
    way upon the security of FTP.
 
 
-8.  References
+9.  References
 
-8.1.  Normative References
+9.1.  Normative References
 
    [RFC0959]  Postel, J. and J. Reynolds, "File Transfer Protocol",
               STD 9, RFC 0959, October 1985.
@@ -556,7 +556,7 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                [Page 10]
+Bryan, et al.            Expires August 3, 2013                [Page 10]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
@@ -566,7 +566,7 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
    [RFC5234]  Crocker, D. and P. Overell, "Augmented BNF for Syntax
               Specifications: ABNF", STD 68, RFC 5234, January 2008.
 
-8.2.  Informative References
+9.2.  Informative References
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -577,13 +577,13 @@ Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
    [draft-bryan-ftpext-hash]
               Bryan, A., Kosse, T., and D. Stenberg, "FTP Extensions for
-              Cryptographic Hashes", draft-bryan-ftpext-hash-01 (work in
+              Cryptographic Hashes", draft-bryan-ftpext-hash-02 (work in
               progress).
 
 
 Appendix A.  Acknowledgements and Contributors
 
-   Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Tim Kosse.
+   Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Alun Jones.
 
    Portions of [RFC3659] were wholly reused in this document.
 
@@ -593,7 +593,7 @@ Appendix B.  Document History
    [[ to be removed by the RFC editor before publication as an RFC. ]]
 
    Known issues concerning this draft:
-   o  None
+   o  <https://github.com/antbryan/internetdraft/issues>
 
    draft-bryan-ftp-range-08 : January , 2013.
    o  FTPEXT2 mailing list feedback.
@@ -612,7 +612,7 @@ Appendix B.  Document History
 
 
 
-Bryan, et al.            Expires August 2, 2013                [Page 11]
+Bryan, et al.            Expires August 3, 2013                [Page 11]
 
 Internet-Draft      FTP RANG Command for Octet Ranges       January 2013
 
@@ -668,5 +668,5 @@ Authors' Addresses
 
 
 
-Bryan, et al.            Expires August 2, 2013                [Page 12]
+Bryan, et al.            Expires August 3, 2013                [Page 12]
 

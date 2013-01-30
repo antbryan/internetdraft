@@ -166,69 +166,7 @@
 </section>
       </section>
 
-<section title="Octet Ranges in STREAM Mode">
 
-<t>
-   To get a specific part of a file without sending entire file,
-   both sides need some way to agree on where in
-   the data stream to start and end the data transfer.
-</t><t>
-   In STREAM mode, the data connection contains just a stream of
-   unformatted octets of data.  Explicit restart markers thus cannot be
-   inserted into the data stream, they would be indistinguishable from
-   data.  For this reason, the FTP specification <xref target="RFC0959"/> did not provide the
-   ability to do restarts in stream mode.  However, there is not really
-   a need to have explicit restart markers in this case, as restart
-   markers can be implied by the octet offset into the data stream.
-</t><t>
-   Because the data stream defines the file in STREAM mode, a different
-   data stream would represent a different file.  Thus, an offset will
-   always represent the same position within a file.  On the other hand,
-   in other modes than STREAM, the same file can be transferred using
-   quite different octet sequences and yet be reconstructed into the one
-   identical file.  Thus an offset into the data stream in transfer
-   modes other than STREAM would not give an unambiguous restart or end point.
-</t><t>
-   If the data representation TYPE is IMAGE and the STRUcture is File,
-   for many systems the file will be stored exactly in the same format
-   as it is sent across the data connection.  It is then usually very
-   easy for the receiver to determine how much data was previously
-   received, and notify the sender of the offset where the transfer
-   should be restarted.  In other representation types and structures
-   more effort will be required, but it remains always possible to
-   determine the offset with finite, but perhaps non-negligible, effort.
-   In the worst case, an FTP process may need to open a data connection
-   to itself, set the appropriate transfer type and structure, and
-   actually transmit the file, counting the transmitted octets.
-</t><t>
-   If the user-FTP process is intending to restart a retrieve, it will
-   directly calculate the restart marker and send that information in
-   the RANGe command.  However, if the user-FTP process is intending
-   to restart sending the file, it needs to be able to determine how
-   much data was previously sent, and correctly received and saved.
-   The purpose of the SIZE command, as documented in Section 4 of <xref target="RFC3659"/>, is to get this information.
-</t>
-
-<section title="Error Recovery and Range Requests">
-
-<t>
-  STREAM mode transfers with FILE STRUcture may be range requested even
-  though no restart marker has been transferred in addition to the data
-  itself.  This is done by using the SIZE command, if needed, in
-  combination with the RANG command, and one of the standard
-  file transfer commands.
-</t><t>
-  When using TYPE ASCII or IMAGE, the SIZE command will return the
-  number of octets that would actually be transferred if the file were
-  to be sent between the two systems, i.e., with type IMAGE, the SIZE
-  normally would be the number of octets in the file.  With type ASCII,
-  the SIZE would be the number of octets in the file including any
-  modifications required to satisfy the TYPE ASCII CR-LF end-of-line
-  convention.
-</t>   
-</section>
-   
-</section>
 	  
 <section title="The RANGe Command (RANG)" anchor="RANG">
 <t>A new command "RANG" is added to the FTP command set to allow the
@@ -302,10 +240,77 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 </artwork></figure></t>
 
 </section>
+</section>
 
-<section title="RANG Command use with RETR and STOR">
+<section title="RANG Command Use with RETR and STOR">
 
-<t>The RANG command can be used to either resume failed transfer
+
+<section title="Octet Ranges in STREAM Mode">
+
+<t>
+   To get a specific part of a file without sending the entire file,
+   both sides need some way to agree on where in
+   the data stream to start and end the data transfer.
+</t><t>
+   In STREAM mode, the data connection contains just a stream of
+   unformatted octets of data.  Explicit restart markers thus cannot be
+   inserted into the data stream, they would be indistinguishable from
+   data.  For this reason, the FTP specification <xref target="RFC0959"/> did not provide the
+   ability to do restarts in stream mode.  However, there is not really
+   a need to have explicit restart markers in this case, as restart
+   markers can be implied by the octet offset into the data stream.
+</t><t>
+   Because the data stream defines the file in STREAM mode, a different
+   data stream would represent a different file.  Thus, an offset will
+   always represent the same position within a file.  On the other hand,
+   in other modes than STREAM, the same file can be transferred using
+   quite different octet sequences and yet be reconstructed into the one
+   identical file.  Thus an offset into the data stream in transfer
+   modes other than STREAM would not give an unambiguous restart or end point.
+</t><t>
+   If the data representation TYPE is IMAGE and the STRUcture is File,
+   for many systems the file will be stored exactly in the same format
+   as it is sent across the data connection.  It is then usually very
+   easy for the receiver to determine how much data was previously
+   received, and notify the sender of the offset where the transfer
+   should be restarted.  In other representation types and structures
+   more effort will be required, but it remains always possible to
+   determine the offset with finite, but perhaps non-negligible, effort.
+   In the worst case, an FTP process may need to open a data connection
+   to itself, set the appropriate transfer type and structure, and
+   actually transmit the file, counting the transmitted octets.
+</t><t>
+   If the user-FTP process is intending to restart a retrieve, it will
+   directly calculate the restart marker and send that information in
+   the RANGe command.  However, if the user-FTP process is intending
+   to restart sending the file, it needs to be able to determine how
+   much data was previously sent, and correctly received and saved.
+   The purpose of the SIZE command, as documented in Section 4 of <xref target="RFC3659"/>, is to get this information.
+</t>
+</section>
+
+<section title="Error Recovery and Range Requests">
+
+<t>
+  STREAM mode transfers with FILE STRUcture may be range requested even
+  though no restart marker has been transferred in addition to the data
+  itself.  This is done by using the SIZE command, if needed, in
+  combination with the RANG command, and one of the standard
+  file transfer commands.
+</t><t>
+  When using TYPE ASCII or IMAGE, the SIZE command will return the
+  number of octets that would actually be transferred if the file were
+  to be sent between the two systems, i.e., with type IMAGE, the SIZE
+  normally would be the number of octets in the file.  With type ASCII,
+  the SIZE would be the number of octets in the file including any
+  modifications required to satisfy the TYPE ASCII CR-LF end-of-line
+  convention.
+</t>   
+</section>
+
+<section title="RETR and STOR">
+
+<t>The RANG command can be used to either resume a failed transfer
 or to selectively modify a range of octets in a file. Use with RETR is
 comparatively well defined in all cases, as the
 client bears the responsibility of merging the retrieved data with
@@ -367,6 +372,7 @@ reported when the following transfer command is issued.  Such
 errors will cause that transfer request to be rejected with an
 error indicating the invalid restart attempt.</t>
 
+</section>
 
 <section title="User-PI usage of RANG with RETR">
 
@@ -409,7 +415,6 @@ error indicating the invalid restart attempt.</t>
 </section>
 </section>
 
-
 <section title="RANG Command Errors">
 
 
@@ -422,7 +427,7 @@ can be sent by the server-PI, as specified in <xref target="RFC0959"/>.</t>
 
 </section>
 
-</section>
+
 
 <section title="RANG Command Use with Other Commands">
 
@@ -715,13 +720,13 @@ define how they operate with RANG. The HASH command <xref target="draft-bryan-ft
 	    </address>
       </author>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-bryan-ftpext-hash-01"/>
+  <seriesInfo name="Internet-Draft" value="draft-bryan-ftpext-hash-02"/>
 </reference>
 
 	    </references> 
 
 	    <section title="Acknowledgements and Contributors">
-		  <t>Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Tim Kosse.</t>
+		  <t>Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Alun Jones.</t>
 		  <t>Portions of <xref target="RFC3659"/> were wholly reused in this document.</t>
     </section>
 
@@ -733,7 +738,7 @@ define how they operate with RANG. The HASH command <xref target="draft-bryan-ft
 		<t>Known issues concerning this draft:
 	    <list style="symbols"> 
 	      
-		  <t>None</t>
+		  <t><eref target="https://github.com/antbryan/internetdraft/issues"/></t>
 
 	    </list></t>
 		

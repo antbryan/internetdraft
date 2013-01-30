@@ -575,7 +575,7 @@ purpose is an implementation decision.</t>
     <organization />
 </author>
 </front>
-<seriesInfo name='Internet-Draft' value='draft-bryan-ftp-range-07' />
+<seriesInfo name='Internet-Draft' value='draft-bryan-ftp-range-08' />
 </reference>
 
 
@@ -708,6 +708,7 @@ purpose is an implementation decision.</t>
 		<t>Known issues concerning this draft:
 	    <list style="symbols"> 
 	      <t>Should HASH use "MLSx style" responses? S> 213 Hash.SHA-1=80bc95fd3...;Range=0-199; filename.ext</t>
+		  <t><eref target="https://github.com/antbryan/internetdraft/issues"/></t>
 
 	    </list></t>
 		

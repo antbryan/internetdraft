@@ -144,8 +144,8 @@
 <tr><td class="header">Network Working Group</td><td class="header">A. Bryan</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">T. Tsujikawa</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">D. Stenberg</td></tr>
-<tr><td class="header">Expires: August 2, 2013</td><td class="header">T. Kosse</td></tr>
-<tr><td class="header">&nbsp;</td><td class="header">January 29, 2013</td></tr>
+<tr><td class="header">Expires: August 3, 2013</td><td class="header">T. Kosse</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">January 30, 2013</td></tr>
 </table></td></tr></table>
 <h1><br />File Transfer Protocol RANG Command for Octet Ranges<br />draft-bryan-ftp-range-08</h1>
 
@@ -185,7 +185,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on August 2, 2013.</p>
+This Internet-Draft will expire on August 3, 2013.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -212,33 +212,35 @@ Document Conventions<br />
 Basic Tokens<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor4">2.2.</a>&nbsp;
 Server Replies<br />
-<a href="#anchor5">3.</a>&nbsp;
-Octet Ranges in STREAM Mode<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor6">3.1.</a>&nbsp;
-Error Recovery and Range Requests<br />
-<a href="#RANG">4.</a>&nbsp;
+<a href="#RANG">3.</a>&nbsp;
 The RANGe Command (RANG)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor5">3.1.</a>&nbsp;
 FEAT Command Response for RANG Command<br />
+<a href="#anchor6">4.</a>&nbsp;
+RANG Command Use with RETR and STOR<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor7">4.1.</a>&nbsp;
+Octet Ranges in STREAM Mode<br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor8">4.2.</a>&nbsp;
-RANG Command use with RETR and STOR<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.2.1.</a>&nbsp;
+Error Recovery and Range Requests<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor9">4.3.</a>&nbsp;
+RETR and STOR<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.4.</a>&nbsp;
 User-PI usage of RANG with RETR<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#anchor10">4.3.</a>&nbsp;
-RANG Command Errors<br />
 <a href="#anchor11">5.</a>&nbsp;
+RANG Command Errors<br />
+<a href="#anchor12">6.</a>&nbsp;
 RANG Command Use with Other Commands<br />
-<a href="#IANA">6.</a>&nbsp;
+<a href="#IANA">7.</a>&nbsp;
 IANA Considerations<br />
-<a href="#anchor12">7.</a>&nbsp;
+<a href="#anchor13">8.</a>&nbsp;
 Security Considerations<br />
-<a href="#rfc.references1">8.</a>&nbsp;
+<a href="#rfc.references1">9.</a>&nbsp;
 References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">8.1.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references1">9.1.</a>&nbsp;
 Normative References<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">8.2.</a>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rfc.references2">9.2.</a>&nbsp;
 Informative References<br />
-<a href="#anchor15">Appendix&nbsp;A.</a>&nbsp;
+<a href="#anchor16">Appendix&nbsp;A.</a>&nbsp;
 Acknowledgements and Contributors<br />
 <a href="#dochistory">Appendix&nbsp;B.</a>&nbsp;
 Document History<br />
@@ -340,13 +342,93 @@ Server Replies</h3>
    digit code that is their first element.  Thus the term "500 reply"
    means a reply from the server-PI using the three digit code "500".
 </p>
-<a name="anchor5"></a><br /><hr />
+<a name="RANG"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.3"></a><h3>3.&nbsp;
+The RANGe Command (RANG)</h3>
+
+<p>A new command "RANG" is added to the FTP command set to allow the
+client to specify both a start point octet range and an end point
+octet range of a file from a server-FTP process.
+</p>
+<p>The syntax for the RANG command when the current transfer mode is STREAM is:
+
+
+<p>
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+   range-command = "RANG" SP start-point SP end-point CRLF
+   start-point   = 1*DIGIT
+   end-point     = 1*DIGIT
+</pre></div>
+
+<p>[NOTE: end-point is inclusive.]
+</p>
+<p>&lt;start-point&gt; gives the number of octets of the
+immediately-following transfer to not actually send, effectively
+causing the transmission to be started at a later point. A
+value of zero effectively causes the transmission to be started
+at first octet. 
+</p>
+<p>&lt;end-point&gt; gives the number of octets, counted from the beginning of the file, of the
+immediately-following transfer to stop sending at, effectively
+causing the transmission to be ended.  (That is, the end point is relative to the start of the file and not relative to the start point). The server-PI will
+respond to the RANG command with a 350 reply, indicating that
+RANG parameters have been saved, and that another command, which
+can be one of the standard file transfer commands, should then follow to complete the ranged request.
+</p>
+<p>To reset the range command, "RANG 1 0" should be issued. 
+RANG requests where &lt;start-point&gt; is larger than &lt;end-point&gt; 
+(excluding "RANG 1 0") are invalid. The server-PI responds with 501 to these invalid requests and automatically resets the octet selection to the default, which is the whole file.
+The server-PI MUST reply with a 350 reply if "RANG 1 0" is issued
+by client-PI because it is a valid way of resetting the range. (The range would also be reset if the session
+is reinitialized with REIN but this terminates the user and resets all parameters).
+</p>
+<p>
+<p>
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+   range-response = range-ok / error-response
+   range-ok       = "350" SP *TCHAR CRLF
+</pre></div>
+
+<a name="anchor5"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
+FEAT Command Response for RANG Command</h3>
+
+<p>When replying to the FEAT command <a class='info' href='#RFC2389'>[RFC2389]<span> (</span><span class='info'>Hethmon, P. and R. Elz, &ldquo;Feature negotiation mechanism for the File Transfer Protocol,&rdquo; August&nbsp;1998.</span><span>)</span></a>, a server-FTP process that supports the RANG command, as specified here, MUST include, a line containing exactly the string "RANG STREAM".
+This string is case insensitive, and MAY be sent in any mixture of upper or lower case, however it SHOULD be sent in upper case. That is, the response SHOULD be:
+</p>
+<p>
+<p>
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+   C&gt; FEAT
+   S&gt; 211-Extensions supported:
+   S&gt;  ...
+   S&gt;  RANG STREAM
+   S&gt;  ...
+   S&gt; 211 END
+</pre></div>
+
+<p>The ellipses indicate place holders where other features may be included, and are not required. The one-space indentation of the feature lines is mandatory <a class='info' href='#RFC2389'>[RFC2389]<span> (</span><span class='info'>Hethmon, P. and R. Elz, &ldquo;Feature negotiation mechanism for the File Transfer Protocol,&rdquo; August&nbsp;1998.</span><span>)</span></a>.
+</p>
+<p>
+<p>
+</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
+   range-feat = SP "RANG" SP "STREAM" CRLF
+</pre></div>
+
+<a name="anchor6"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4"></a><h3>4.&nbsp;
+RANG Command Use with RETR and STOR</h3>
+
+<a name="anchor7"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
 Octet Ranges in STREAM Mode</h3>
 
 <p>
-   To get a specific part of a file without sending entire file,
+   To get a specific part of a file without sending the entire file,
    both sides need some way to agree on where in
    the data stream to start and end the data transfer.
 
@@ -394,9 +476,9 @@ Octet Ranges in STREAM Mode</h3>
    The purpose of the SIZE command, as documented in Section 4 of <a class='info' href='#RFC3659'>[RFC3659]<span> (</span><span class='info'>Hethmon, P., &ldquo;Extensions to FTP,&rdquo; March&nbsp;2007.</span><span>)</span></a>, is to get this information.
 
 </p>
-<a name="anchor6"></a><br /><hr />
+<a name="anchor8"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.3.1"></a><h3>3.1.&nbsp;
+<a name="rfc.section.4.2"></a><h3>4.2.&nbsp;
 Error Recovery and Range Requests</h3>
 
 <p>
@@ -417,87 +499,12 @@ Error Recovery and Range Requests</h3>
   convention.
 
 </p>
-<a name="RANG"></a><br /><hr />
+<a name="anchor9"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4"></a><h3>4.&nbsp;
-The RANGe Command (RANG)</h3>
+<a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
+RETR and STOR</h3>
 
-<p>A new command "RANG" is added to the FTP command set to allow the
-client to specify both a start point octet range and an end point
-octet range of a file from a server-FTP process.
-</p>
-<p>The syntax for the RANG command when the current transfer mode is STREAM is:
-
-
-<p>
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-   range-command = "RANG" SP start-point SP end-point CRLF
-   start-point   = 1*DIGIT
-   end-point     = 1*DIGIT
-</pre></div>
-
-<p>[NOTE: end-point is inclusive.]
-</p>
-<p>&lt;start-point&gt; gives the number of octets of the
-immediately-following transfer to not actually send, effectively
-causing the transmission to be started at a later point. A
-value of zero effectively causes the transmission to be started
-at first octet. 
-</p>
-<p>&lt;end-point&gt; gives the number of octets, counted from the beginning of the file, of the
-immediately-following transfer to stop sending at, effectively
-causing the transmission to be ended.  (That is, the end point is relative to the start of the file and not relative to the start point). The server-PI will
-respond to the RANG command with a 350 reply, indicating that
-RANG parameters have been saved, and that another command, which
-can be one of the standard file transfer commands, should then follow to complete the ranged request.
-</p>
-<p>To reset the range command, "RANG 1 0" should be issued. 
-RANG requests where &lt;start-point&gt; is larger than &lt;end-point&gt; 
-(excluding "RANG 1 0") are invalid. The server-PI responds with 501 to these invalid requests and automatically resets the octet selection to the default, which is the whole file.
-The server-PI MUST reply with a 350 reply if "RANG 1 0" is issued
-by client-PI because it is a valid way of resetting the range. (The range would also be reset if the session
-is reinitialized with REIN but this terminates the user and resets all parameters).
-</p>
-<p>
-<p>
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-   range-response = range-ok / error-response
-   range-ok       = "350" SP *TCHAR CRLF
-</pre></div>
-
-<a name="anchor7"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.1"></a><h3>4.1.&nbsp;
-FEAT Command Response for RANG Command</h3>
-
-<p>When replying to the FEAT command <a class='info' href='#RFC2389'>[RFC2389]<span> (</span><span class='info'>Hethmon, P. and R. Elz, &ldquo;Feature negotiation mechanism for the File Transfer Protocol,&rdquo; August&nbsp;1998.</span><span>)</span></a>, a server-FTP process that supports the RANG command, as specified here, MUST include, a line containing exactly the string "RANG STREAM".
-This string is case insensitive, and MAY be sent in any mixture of upper or lower case, however it SHOULD be sent in upper case. That is, the response SHOULD be:
-</p>
-<p>
-<p>
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-   C&gt; FEAT
-   S&gt; 211-Extensions supported:
-   S&gt;  ...
-   S&gt;  RANG STREAM
-   S&gt;  ...
-   S&gt; 211 END
-</pre></div>
-
-<p>The ellipses indicate place holders where other features may be included, and are not required. The one-space indentation of the feature lines is mandatory <a class='info' href='#RFC2389'>[RFC2389]<span> (</span><span class='info'>Hethmon, P. and R. Elz, &ldquo;Feature negotiation mechanism for the File Transfer Protocol,&rdquo; August&nbsp;1998.</span><span>)</span></a>.
-</p>
-<p>
-<p>
-</p><div style='display: table; width: 0; margin-left: 3em; margin-right: auto'><pre>
-   range-feat = SP "RANG" SP "STREAM" CRLF
-</pre></div>
-
-<a name="anchor8"></a><br /><hr />
-<table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2"></a><h3>4.2.&nbsp;
-RANG Command use with RETR and STOR</h3>
-
-<p>The RANG command can be used to either resume failed transfer
+<p>The RANG command can be used to either resume a failed transfer
 or to selectively modify a range of octets in a file. Use with RETR is
 comparatively well defined in all cases, as the
 client bears the responsibility of merging the retrieved data with
@@ -559,9 +566,9 @@ reported when the following transfer command is issued.  Such
 errors will cause that transfer request to be rejected with an
 error indicating the invalid restart attempt.
 </p>
-<a name="anchor9"></a><br /><hr />
+<a name="anchor10"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.2.1"></a><h3>4.2.1.&nbsp;
+<a name="rfc.section.4.4"></a><h3>4.4.&nbsp;
 User-PI usage of RANG with RETR</h3>
 
 <p>The user-PI issues the FEAT command to query the server-PI if it supports the RANG command. In this example, the server-PI also supports REST.
@@ -600,9 +607,9 @@ User-PI usage of RANG with RETR</h3>
 
 <p>In the above example, data is sent from offset 802816 to, and including, offset 1000000.
 </p>
-<a name="anchor10"></a><br /><hr />
+<a name="anchor11"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.4.3"></a><h3>4.3.&nbsp;
+<a name="rfc.section.5"></a><h3>5.&nbsp;
 RANG Command Errors</h3>
 
 <p>Where the RANG command is unrecognized or there is a syntax error in parameters or arguments, a 500 or 501 reply
@@ -612,9 +619,9 @@ can be sent by the server-PI, as specified in <a class='info' href='#RFC0959'>[R
 </p>
 <p>The server-PI SHOULD reply with a 552 reply if the user is not allowed to use the RANG command.
 </p>
-<a name="anchor11"></a><br /><hr />
+<a name="anchor12"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.5"></a><h3>5.&nbsp;
+<a name="rfc.section.6"></a><h3>6.&nbsp;
 RANG Command Use with Other Commands</h3>
 
 <p>This specification defines the use of RANG in combination with other specific commands. Other commands are undefined but could decide to use RANG in a similar way, to select an octet range, and their specification would
@@ -622,7 +629,7 @@ define how they operate with RANG. The HASH command <a class='info' href='#draft
 </p>
 <a name="IANA"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.6"></a><h3>6.&nbsp;
+<a name="rfc.section.7"></a><h3>7.&nbsp;
 IANA Considerations</h3>
 
 <p>This new command is added to the "FTP Commands and Extensions" registry created by <a class='info' href='#RFC5797'>[RFC5797]<span> (</span><span class='info'>Klensin, J. and A. Hoenes, &ldquo;FTP Command and Extension Registry,&rdquo; March&nbsp;2010.</span><span>)</span></a>.
@@ -639,9 +646,9 @@ IANA Considerations</h3>
 </p>
 <p>Reference: This specification
 </p>
-<a name="anchor12"></a><br /><hr />
+<a name="anchor13"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.7"></a><h3>7.&nbsp;
+<a name="rfc.section.8"></a><h3>8.&nbsp;
 Security Considerations</h3>
 
 <p>
@@ -651,12 +658,12 @@ Security Considerations</h3>
 </p>
 <a name="rfc.references"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<a name="rfc.section.8"></a><h3>8.&nbsp;
+<a name="rfc.section.9"></a><h3>9.&nbsp;
 References</h3>
 
 <a name="rfc.references1"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>8.1.&nbsp;Normative References</h3>
+<h3>9.1.&nbsp;Normative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="RFC0959">[RFC0959]</a></td>
 <td class="author-text">Postel, J. and J. Reynolds, &ldquo;<a href="http://tools.ietf.org/html/rfc0959">File Transfer Protocol</a>,&rdquo; STD&nbsp;9, RFC&nbsp;0959, October&nbsp;1985.</td></tr>
@@ -672,22 +679,22 @@ References</h3>
 
 <a name="rfc.references2"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
-<h3>8.2.&nbsp;Informative References</h3>
+<h3>9.2.&nbsp;Informative References</h3>
 <table width="99%" border="0">
 <tr><td class="author-text" valign="top"><a name="RFC2616">[RFC2616]</a></td>
 <td class="author-text"><a href="mailto:fielding@ics.uci.edu">Fielding, R.</a>, <a href="mailto:jg@w3.org">Gettys, J.</a>, <a href="mailto:mogul@wrl.dec.com">Mogul, J.</a>, <a href="mailto:frystyk@w3.org">Frystyk, H.</a>, <a href="mailto:masinter@parc.xerox.com">Masinter, L.</a>, <a href="mailto:paulle@microsoft.com">Leach, P.</a>, and <a href="mailto:timbl@w3.org">T. Berners-Lee</a>, &ldquo;<a href="http://tools.ietf.org/html/rfc2616">Hypertext Transfer Protocol -- HTTP/1.1</a>,&rdquo; RFC&nbsp;2616, June&nbsp;1999 (<a href="http://www.rfc-editor.org/rfc/rfc2616.txt">TXT</a>, <a href="http://www.rfc-editor.org/rfc/rfc2616.ps">PS</a>, <a href="http://www.rfc-editor.org/rfc/rfc2616.pdf">PDF</a>, <a href="http://xml.resource.org/public/rfc/html/rfc2616.html">HTML</a>, <a href="http://xml.resource.org/public/rfc/xml/rfc2616.xml">XML</a>).</td></tr>
 <tr><td class="author-text" valign="top"><a name="RFC5797">[RFC5797]</a></td>
 <td class="author-text">Klensin, J. and A. Hoenes, &ldquo;<a href="http://tools.ietf.org/html/rfc5797">FTP Command and Extension Registry</a>,&rdquo; RFC&nbsp;5797, March&nbsp;2010.</td></tr>
 <tr><td class="author-text" valign="top"><a name="draft-bryan-ftpext-hash">[draft-bryan-ftpext-hash]</a></td>
-<td class="author-text"><a href="mailto:anthonybryan@gmail.com">Bryan, A.</a>, <a href="mailto:tim.kosse@filezilla-project.org">Kosse, T.</a>, and <a href="mailto:daniel@haxx.se">D. Stenberg</a>, &ldquo;<a href="http://tools.ietf.org/html/draft-bryan-ftpext-hash-01">FTP Extensions for Cryptographic Hashes</a>,&rdquo; draft-bryan-ftpext-hash-01 (work in progress).</td></tr>
+<td class="author-text"><a href="mailto:anthonybryan@gmail.com">Bryan, A.</a>, <a href="mailto:tim.kosse@filezilla-project.org">Kosse, T.</a>, and <a href="mailto:daniel@haxx.se">D. Stenberg</a>, &ldquo;<a href="http://tools.ietf.org/html/draft-bryan-ftpext-hash-02">FTP Extensions for Cryptographic Hashes</a>,&rdquo; draft-bryan-ftpext-hash-02 (work in progress).</td></tr>
 </table>
 
-<a name="anchor15"></a><br /><hr />
+<a name="anchor16"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.A"></a><h3>Appendix A.&nbsp;
 Acknowledgements and Contributors</h3>
 
-<p>Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Tim Kosse.
+<p>Thanks to the FTPEXT2 Working Group, Kamil Dudka, and Alun Jones.
 </p>
 <p>Portions of <a class='info' href='#RFC3659'>[RFC3659]<span> (</span><span class='info'>Hethmon, P., &ldquo;Extensions to FTP,&rdquo; March&nbsp;2007.</span><span>)</span></a> were wholly reused in this document.
 </p>
@@ -701,7 +708,7 @@ Document History</h3>
 <p>Known issues concerning this draft:
 	    </p>
 <ul class="text">
-<li>None
+<li><a href='https://github.com/antbryan/internetdraft/issues'>https://github.com/antbryan/internetdraft/issues</a>
 </li>
 </ul>
 

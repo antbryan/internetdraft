@@ -4,7 +4,7 @@
 Network Working Group                                           A. Bryan
 Internet-Draft                                               D. Stenberg
 Intended status: Standards Track                            T. Tsujikawa
-Expires: August 2, 2013                                 January 29, 2013
+Expires: August 3, 2013                                 January 30, 2013
 
 
       File Transfer Protocol LOCK Command for Using a Single Port
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 2, 2013.
+   This Internet-Draft will expire on August 3, 2013.
 
 Copyright Notice
 
@@ -52,7 +52,7 @@ Copyright Notice
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 1]
+Bryan, et al.            Expires August 3, 2013                 [Page 1]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -108,7 +108,7 @@ Table of Contents
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 2]
+Bryan, et al.            Expires August 3, 2013                 [Page 2]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -164,7 +164,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 3]
+Bryan, et al.            Expires August 3, 2013                 [Page 3]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -220,7 +220,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 4]
+Bryan, et al.            Expires August 3, 2013                 [Page 4]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -276,7 +276,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 5]
+Bryan, et al.            Expires August 3, 2013                 [Page 5]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -332,7 +332,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 6]
+Bryan, et al.            Expires August 3, 2013                 [Page 6]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -388,7 +388,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 7]
+Bryan, et al.            Expires August 3, 2013                 [Page 7]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -444,7 +444,7 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 8]
+Bryan, et al.            Expires August 3, 2013                 [Page 8]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -489,7 +489,7 @@ Appendix C.  Document History
 
    Known issues concerning this draft:
 
-   o  https://github.com/antbryan/internetdraft/issues
+   o  <https://github.com/antbryan/internetdraft/issues>
 
    draft-bryan-ftp-lock-02 : January , 2013.
 
@@ -500,7 +500,7 @@ Appendix C.  Document History
 
 
 
-Bryan, et al.            Expires August 2, 2013                 [Page 9]
+Bryan, et al.            Expires August 3, 2013                 [Page 9]
 
 Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
@@ -556,5 +556,5 @@ Authors' Addresses
 
 
 
-Bryan, et al.            Expires August 2, 2013                [Page 10]
+Bryan, et al.            Expires August 3, 2013                [Page 10]
 

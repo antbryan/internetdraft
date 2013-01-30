@@ -486,7 +486,7 @@ This string is case insensitive, and MAY be sent in any mixture of upper or lowe
 		<t>Known issues concerning this draft:
 	    <list style="symbols"> 
 	      
-		  <t>https://github.com/antbryan/internetdraft/issues</t>
+		  <t><eref target="https://github.com/antbryan/internetdraft/issues"/></t>
 
 	    </list></t>
 
