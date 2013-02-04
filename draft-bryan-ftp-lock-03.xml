@@ -53,6 +53,13 @@
           <uri>http://aria2.sourceforge.net</uri>
         </address>
       </author>
+      <author initials="T." surname="Kosse" fullname="Tim Kosse">
+	    <organization></organization>
+	    <address>
+	      <email>tim.kosse@filezilla-project.org</email>
+	      <uri>http://filezilla-project.org/</uri>
+	    </address>
+      </author>
 	<date year="2013"/>
       <abstract>
 	<t>One of the biggest hurdles for FTP in real life usage is its use of two connections. First, it uses a primary connection to send control commands on, and when it sends or receives data, it opens a second TCP stream for that purpose. 
@@ -196,6 +203,8 @@
    There are drawbacks, such as not being able to carry out control connection actions during transfer, but the benefits outweigh them. Many implementations do not really allow the client to do much on the control connection while the transfer is ongoing anyway.
 </t><t>
    The LOCK command causes anything that would normally open a data connection to be re-routed over the control connection and remain using a single connection.
+</t><t>
+FTP secured with TLS <xref target="RFC4217"/> is RECOMMENDED when LOCK is in use as most firewalls and NATs will stop interfering with the control connection following the AUTH TLS command.
 </t>
   
 </section>
@@ -239,10 +248,18 @@ today without checking the file since the risk that a very long string with lots
 <t>The LOCK command will cause LIST and NLST directory listings to be sent over the control connection, instead of the data connection. Some clients issue one of these commands automatically at login,
 so if the server supports LOCK and the client prefers LOCK, then LOCK should be issued after login but before one of these commands.</t>
 
+<t>The STAT command and Telnet IP and Synch signals are not allowed during a running transfer.</t>
+
+<t>When LOCK is in use, the response to a SIZE command refers to the amount of octets that would be enclosed in the boundary start and end, excluding the
+boundary markers.</t>
+
+<t>When LOCK is in use, the restart offset of the REST command refers to the actual data payload excluding the boundary.</t>
+
 <t>If the LOCK command is issued after a data connection has already been opened, it will continue to completion uninterrupted and close once finished.</t>
 
-<t>To turn off LOCK and return to the previous behavior, a client can issue a PORT, PASV, or similar command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.</t>
+<t>To turn off LOCK and return to the previous behavior, a client can issue a EPRT, EPSV, PASV, or PORT command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.</t>
 
+<t>LOCK is undefined with other transfer modes, besides STREAM.</t>
 
 <section title="FEAT Command Response for LOCK Command">
 

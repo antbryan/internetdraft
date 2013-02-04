@@ -144,7 +144,8 @@
 <tr><td class="header">Network Working Group</td><td class="header">A. Bryan</td></tr>
 <tr><td class="header">Internet-Draft</td><td class="header">D. Stenberg</td></tr>
 <tr><td class="header">Intended status: Standards Track</td><td class="header">T. Tsujikawa</td></tr>
-<tr><td class="header">Expires: August 3, 2013</td><td class="header">January 30, 2013</td></tr>
+<tr><td class="header">Expires: August 8, 2013</td><td class="header">T. Kosse</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">February 4, 2013</td></tr>
 </table></td></tr></table>
 <h1><br />File Transfer Protocol LOCK Command for Using a Single Port<br />draft-bryan-ftp-lock-03</h1>
 
@@ -184,7 +185,7 @@ and may be updated, replaced, or obsoleted by other documents at any time.
 It is inappropriate to use Internet-Drafts as reference material or to cite
 them other than as &ldquo;work in progress.&rdquo;</p>
 <p>
-This Internet-Draft will expire on August 3, 2013.</p>
+This Internet-Draft will expire on August 8, 2013.</p>
 
 <h3>Copyright Notice</h3>
 <p>
@@ -380,6 +381,10 @@ FTP Data Transfers Over Control Connection</h3>
    The LOCK command causes anything that would normally open a data connection to be re-routed over the control connection and remain using a single connection.
 
 </p>
+<p>
+FTP secured with TLS <a class='info' href='#RFC4217'>[RFC4217]<span> (</span><span class='info'>Ford-Hutchinson, P., &ldquo;Securing FTP with TLS,&rdquo; October&nbsp;2005.</span><span>)</span></a> is RECOMMENDED when LOCK is in use as most firewalls and NATs will stop interfering with the control connection following the AUTH TLS command.
+
+</p>
 <a name="LOCK"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
 <a name="rfc.section.5"></a><h3>5.&nbsp;
@@ -423,9 +428,18 @@ today without checking the file since the risk that a very long string with lots
 <p>The LOCK command will cause LIST and NLST directory listings to be sent over the control connection, instead of the data connection. Some clients issue one of these commands automatically at login,
 so if the server supports LOCK and the client prefers LOCK, then LOCK should be issued after login but before one of these commands.
 </p>
+<p>The STAT command and Telnet IP and Synch signals are not allowed during a running transfer.
+</p>
+<p>When LOCK is in use, the response to a SIZE command refers to the amount of octets that would be enclosed in the boundary start and end, excluding the
+boundary markers.
+</p>
+<p>When LOCK is in use, the restart offset of the REST command refers to the actual data payload excluding the boundary.
+</p>
 <p>If the LOCK command is issued after a data connection has already been opened, it will continue to completion uninterrupted and close once finished.
 </p>
-<p>To turn off LOCK and return to the previous behavior, a client can issue a PORT, PASV, or similar command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.
+<p>To turn off LOCK and return to the previous behavior, a client can issue a EPRT, EPSV, PASV, or PORT command. Another alternative is to reinitialize the session with REIN but this terminates the user and resets all parameters.
+</p>
+<p>LOCK is undefined with other transfer modes, besides STREAM.
 </p>
 <a name="anchor7"></a><br /><hr />
 <table summary="layout" cellpadding="0" cellspacing="2" class="TOCbug" align="right"><tr><td class="TOCbug"><a href="#toc">&nbsp;TOC&nbsp;</a></td></tr></table>
@@ -682,5 +696,12 @@ Document History</h3>
 <td class="author-text"><a href="mailto:tatsuhiro.t@gmail.com">tatsuhiro.t@gmail.com</a></td></tr>
 <tr><td class="author" align="right">URI:&nbsp;</td>
 <td class="author-text"><a href="http://aria2.sourceforge.net">http://aria2.sourceforge.net</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Tim Kosse</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:tim.kosse@filezilla-project.org">tim.kosse@filezilla-project.org</a></td></tr>
+<tr><td class="author" align="right">URI:&nbsp;</td>
+<td class="author-text"><a href="http://filezilla-project.org/">http://filezilla-project.org/</a></td></tr>
 </table>
 </body></html>

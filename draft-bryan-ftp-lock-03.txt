@@ -4,7 +4,8 @@
 Network Working Group                                           A. Bryan
 Internet-Draft                                               D. Stenberg
 Intended status: Standards Track                            T. Tsujikawa
-Expires: August 3, 2013                                 January 30, 2013
+Expires: August 8, 2013                                         T. Kosse
+                                                        February 4, 2013
 
 
       File Transfer Protocol LOCK Command for Using a Single Port
@@ -44,19 +45,19 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 3, 2013.
+   This Internet-Draft will expire on August 8, 2013.
 
 Copyright Notice
 
-   Copyright (c) 2013 IETF Trust and the persons identified as the
 
 
 
-Bryan, et al.            Expires August 3, 2013                 [Page 1]
+Bryan, et al.            Expires August 8, 2013                 [Page 1]
 
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
 
 
+   Copyright (c) 2013 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -77,15 +78,15 @@ Table of Contents
      3.1.  Basic Tokens . . . . . . . . . . . . . . . . . . . . . . .  4
      3.2.  Server Replies . . . . . . . . . . . . . . . . . . . . . .  5
    4.  FTP Data Transfers Over Control Connection . . . . . . . . . .  5
-   5.  The LOCK Command (LOCK)  . . . . . . . . . . . . . . . . . . .  5
+   5.  The LOCK Command (LOCK)  . . . . . . . . . . . . . . . . . . .  6
      5.1.  FEAT Command Response for LOCK Command . . . . . . . . . .  7
      5.2.  User-PI usage of LOCK  . . . . . . . . . . . . . . . . . .  7
-     5.3.  LOCK Command Errors  . . . . . . . . . . . . . . . . . . .  8
+     5.3.  LOCK Command Errors  . . . . . . . . . . . . . . . . . . .  9
    6.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  9
    7.  Security Considerations  . . . . . . . . . . . . . . . . . . .  9
-   8.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  9
-     8.1.  Normative References . . . . . . . . . . . . . . . . . . .  9
-     8.2.  Informative References . . . . . . . . . . . . . . . . . .  9
+   8.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+     8.1.  Normative References . . . . . . . . . . . . . . . . . . . 10
+     8.2.  Informative References . . . . . . . . . . . . . . . . . . 10
    Appendix A.  Acknowledgements and Contributors . . . . . . . . . . 10
    Appendix B.  Two Port FTP  . . . . . . . . . . . . . . . . . . . . 10
    Appendix C.  Document History  . . . . . . . . . . . . . . . . . . 10
@@ -107,10 +108,9 @@ Table of Contents
 
 
 
-
-Bryan, et al.            Expires August 3, 2013                 [Page 2]
+Bryan, et al.            Expires August 8, 2013                 [Page 2]
 
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 3, 2013                 [Page 3]
+Bryan, et al.            Expires August 8, 2013                 [Page 3]
 
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
 
 
 3.  Document Conventions
@@ -220,9 +220,9 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-Bryan, et al.            Expires August 3, 2013                 [Page 4]
+Bryan, et al.            Expires August 8, 2013                 [Page 4]
 
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
 
 
    same as "lock", "Lock", "LoCk", etc., and "ftp.example.com" is the
@@ -267,19 +267,25 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    connection to be re-routed over the control connection and remain
    using a single connection.
 
+   FTP secured with TLS [RFC4217] is RECOMMENDED when LOCK is in use as
+   most firewalls and NATs will stop interfering with the control
+   connection following the AUTH TLS command.
+
+
+
+
+
+
+Bryan, et al.            Expires August 8, 2013                 [Page 5]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
 5.  The LOCK Command (LOCK)
 
    A new command "LOCK" is added to the FTP command set to allow the
    client to request that data transfers occur over the current control
    connection without opening up another port for a data connection.
-
-
-
-
-Bryan, et al.            Expires August 3, 2013                 [Page 5]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
 
    The syntax for the LOCK command when the current transfer mode is
    STREAM is:
@@ -318,24 +324,34 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    if the server supports LOCK and the client prefers LOCK, then LOCK
    should be issued after login but before one of these commands.
 
+   The STAT command and Telnet IP and Synch signals are not allowed
+   during a running transfer.
+
+   When LOCK is in use, the response to a SIZE command refers to the
+   amount of octets that would be enclosed in the boundary start and
+
+
+
+Bryan, et al.            Expires August 8, 2013                 [Page 6]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
+   end, excluding the boundary markers.
+
+   When LOCK is in use, the restart offset of the REST command refers to
+   the actual data payload excluding the boundary.
+
    If the LOCK command is issued after a data connection has already
    been opened, it will continue to completion uninterrupted and close
    once finished.
 
    To turn off LOCK and return to the previous behavior, a client can
-   issue a PORT, PASV, or similar command.  Another alternative is to
+   issue a EPRT, EPSV, PASV, or PORT command.  Another alternative is to
    reinitialize the session with REIN but this terminates the user and
    resets all parameters.
 
-
-
-
-
-
-Bryan, et al.            Expires August 3, 2013                 [Page 6]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
+   LOCK is undefined with other transfer modes, besides STREAM.
 
 5.1.  FEAT Command Response for LOCK Command
 
@@ -367,6 +383,16 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    supports the LOCK command.
 
 
+
+
+
+
+
+Bryan, et al.            Expires August 8, 2013                 [Page 7]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
       C> FEAT
       S> 211-Extensions supported:
       S>  ...
@@ -375,22 +401,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
       S> 211 END
 
    Next, the user-PI issues the LIST command.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bryan, et al.            Expires August 3, 2013                 [Page 7]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
       C> LOCK
@@ -423,6 +433,22 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    file.
 
 
+
+
+
+
+
+
+
+
+
+
+
+Bryan, et al.            Expires August 8, 2013                 [Page 8]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
       C> TYPE I
       S> 200 Type set to I.
       C> LOCK
@@ -441,14 +467,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    unrecognized or unimplemented.
 
    The server-PI SHOULD reply with a 552 reply if the user is not
-
-
-
-Bryan, et al.            Expires August 3, 2013                 [Page 8]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
-
    allowed to use the LOCK command.
 
 6.  IANA Considerations
@@ -479,6 +497,14 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 8.  References
 
+
+
+
+Bryan, et al.            Expires August 8, 2013                 [Page 9]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
 8.1.  Normative References
 
    [RFC0959]  Postel, J. and J. Reynolds, "File Transfer Protocol",
@@ -497,13 +523,6 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
    [RFC4217]  Ford-Hutchinson, P., "Securing FTP with TLS", RFC 4217,
               October 2005.
-
-
-
-Bryan, et al.            Expires August 3, 2013                 [Page 9]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
 
    [RFC5797]  Klensin, J. and A. Hoenes, "FTP Command and Extension
               Registry", RFC 5797, March 2010.
@@ -534,6 +553,14 @@ Appendix C.  Document History
 
    draft-bryan-ftp-lock-02 : January , 2013.
 
+
+
+
+Bryan, et al.            Expires August 8, 2013                [Page 10]
+
+Internet-Draft  FTP LOCK Command for Using a Single Port   February 2013
+
+
    o  FTPEXT2 mailing list feedback.
 
    draft-bryan-ftp-lock-01 : January 19, 2013.
@@ -554,13 +581,6 @@ Authors' Addresses
    URI:   http://www.metalinker.org
 
 
-
-
-Bryan, et al.            Expires August 3, 2013                [Page 10]
-
-Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
-
-
    Daniel Stenberg
 
    EMail: daniel@haxx.se
@@ -575,6 +595,10 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
    URI:   http://aria2.sourceforge.net
 
 
+   Tim Kosse
+
+   EMail: tim.kosse@filezilla-project.org
+   URI:   http://filezilla-project.org/
 
 
 
@@ -588,29 +612,5 @@ Internet-Draft  FTP LOCK Command for Using a Single Port    January 2013
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bryan, et al.            Expires August 3, 2013                [Page 11]
+Bryan, et al.            Expires August 8, 2013                [Page 11]
 
