@@ -231,8 +231,6 @@ A careful sender SHOULD check the file first so that there is no occurance
 of the separator within the file, but this method is used by browsers and HTTP clients 
 today without checking the file since the risk that a very long string with lots of randomness would actually exist in the file is next to none.</t>
 
-<t>When uploading files, the client MUST use end-of-marker solution.</t>
-
 <t>
 <figure> 
 	  <preamble></preamble>

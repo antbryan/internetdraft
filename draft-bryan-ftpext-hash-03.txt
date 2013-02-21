@@ -8,7 +8,7 @@ Expires: August 22, 2013                               February 18, 2013
 
 
       File Transfer Protocol HASH Command for Cryptographic Hashes
-                       draft-bryan-ftpext-hash-02
+                       draft-bryan-ftpext-hash-03
 
 Abstract
 
